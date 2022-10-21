@@ -18,14 +18,11 @@ import java.util.List;
 @Transactional
 public class GameServiceImpl implements GameService {
 
-    private final GameRepo gameRepository;
-    private final TaskRepo taskRepository;
-
     @Autowired
-    public GameServiceImpl(final GameRepo gameRepository, final TaskRepo taskRepository) {
-        this.gameRepository = gameRepository;
-        this.taskRepository = taskRepository;
-    }
+    private GameRepo gameRepository;
+    @Autowired
+    private TaskRepo taskRepository;
+
 
     @Override
     public GameEto save(GameEto newGame) {

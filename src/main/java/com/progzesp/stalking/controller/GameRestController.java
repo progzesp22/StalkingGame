@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/rest")
+@RequestMapping("/rest/games")
 public class GameRestController {
 
     @Autowired
     private GameService gameService;
 
 
-    @PostMapping("/games")
-    public GameEto addTeacher(@RequestBody GameEto newTeacher) {
-        return gameService.save(newTeacher);
+    @PostMapping()
+    public GameEto addGame(@RequestBody GameEto newGame) {
+        return gameService.save(newGame);
     }
 }

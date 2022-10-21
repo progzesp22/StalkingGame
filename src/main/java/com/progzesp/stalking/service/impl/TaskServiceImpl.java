@@ -7,6 +7,7 @@ import com.progzesp.stalking.persistance.entity.TaskEntity;
 import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.TaskRepo;
 import com.progzesp.stalking.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,15 +19,11 @@ import java.util.Optional;
 @Transactional
 public class TaskServiceImpl implements TaskService {
 
-    private final TaskRepo taskRepository;
+    @Autowired
+    private TaskRepo taskRepository;
 
-    private final GameRepo gameRepository;
-
-
-    public TaskServiceImpl(final TaskRepo taskRepository, final GameRepo gameRepository) {
-        this.taskRepository = taskRepository;
-        this.gameRepository = gameRepository;
-    }
+    @Autowired
+    private GameRepo gameRepository;
 
 
     @Override
