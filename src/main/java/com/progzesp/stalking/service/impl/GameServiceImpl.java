@@ -27,12 +27,13 @@ public class GameServiceImpl implements GameService {
     @Override
     public GameEto save(GameEto newGame) {
 
-        List<Long> ids = newGame.getTaskEntityList();
-        List<TaskEntity> tasks = this.taskRepository.findAllById(ids);
-
         GameEntity gameEntity = GameMapper.mapToEntity(newGame);
-        gameEntity.setTaskEntityList(tasks);
         gameEntity = this.gameRepository.save(gameEntity);
         return GameMapper.mapToETO(gameEntity);
+    }
+
+    @Override
+    public List<GameEto> findAllGames() {
+        return GameMapper.mapToETOList(this.gameRepository.findAll());
     }
 }

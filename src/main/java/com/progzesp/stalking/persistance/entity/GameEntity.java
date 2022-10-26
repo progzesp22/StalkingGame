@@ -1,5 +1,7 @@
 package com.progzesp.stalking.persistance.entity;
 
+import org.springframework.lang.Nullable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -11,7 +13,6 @@ import java.util.List;
 public class GameEntity extends AbstractEntity {
 
     //TODO add more fields
-
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
     private List<TaskEntity> taskEntityList;
 

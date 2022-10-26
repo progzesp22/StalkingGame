@@ -1,6 +1,7 @@
 package com.progzesp.stalking.persistance.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "task")
@@ -13,6 +14,7 @@ public class TaskEntity extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private TaskType taskType;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private GameEntity game;
 

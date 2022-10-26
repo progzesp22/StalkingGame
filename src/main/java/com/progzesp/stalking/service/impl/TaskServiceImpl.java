@@ -30,15 +30,10 @@ public class TaskServiceImpl implements TaskService {
     public TaskEto save(TaskEto newTask) {
 
         TaskEntity taskEntity = TaskMapper.mapToEntity(newTask);
-
-        //TODO: can a task be saved without a game? Or throw error?
-        if (newTask.getGameId() != null) {
-            Long id = newTask.getGameId();
-            Optional<GameEntity> optionalGame = gameRepository.findById(id);
-            GameEntity game = optionalGame.orElse(null);
-            taskEntity.setGame(game);
-        }
-
+        Long id = newTask.getGameId();
+        Optional<GameEntity> optionalGame = gameRepository.findById(id);
+        GameEntity game = optionalGame.orElse(null);
+        taskEntity.setGame(game);
         taskEntity = this.taskRepository.save(taskEntity);
         return TaskMapper.mapToETO(taskEntity);
     }

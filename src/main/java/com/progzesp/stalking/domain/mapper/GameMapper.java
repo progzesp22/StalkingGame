@@ -4,6 +4,7 @@ import com.progzesp.stalking.domain.GameEto;
 import com.progzesp.stalking.persistance.entity.AbstractEntity;
 import com.progzesp.stalking.persistance.entity.GameEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,12 +21,13 @@ public final class GameMapper {
     public static GameEntity mapToEntity(GameEto to) {
 
         GameEntity entity = new GameEntity();
+        entity.setTaskEntityList(new ArrayList<>());
         entity.setId(to.getId());
         return entity;
     }
 
 
-    public List<GameEto> mapToETOList(List<GameEntity> entities) {
+    public static List<GameEto> mapToETOList(List<GameEntity> entities) {
         return entities.stream().map(e -> mapToETO(e)).collect(Collectors.toList());
     }
 
