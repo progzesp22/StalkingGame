@@ -19,6 +19,8 @@ import java.util.List;
 public class GameServiceImpl implements GameService {
 
     @Autowired
+    private GameMapper gameMapper;
+    @Autowired
     private GameRepo gameRepository;
     @Autowired
     private TaskRepo taskRepository;
@@ -27,13 +29,13 @@ public class GameServiceImpl implements GameService {
     @Override
     public GameEto save(GameEto newGame) {
 
-        GameEntity gameEntity = GameMapper.mapToEntity(newGame);
+        GameEntity gameEntity = gameMapper.mapToEntity(newGame);
         gameEntity = this.gameRepository.save(gameEntity);
-        return GameMapper.mapToETO(gameEntity);
+        return gameMapper.mapToETO(gameEntity);
     }
 
     @Override
     public List<GameEto> findAllGames() {
-        return GameMapper.mapToETOList(this.gameRepository.findAll());
+        return gameMapper.mapToETOList(this.gameRepository.findAll());
     }
 }

@@ -2,13 +2,15 @@ package com.progzesp.stalking.domain.mapper;
 
 import com.progzesp.stalking.domain.TaskEto;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class TaskMapper {
+@Component
+public class TaskMapper implements Mapper<TaskEto, TaskEntity> {
 
-    public static final TaskEto mapToETO(TaskEntity entity){
+    public final TaskEto mapToETO(TaskEntity entity){
 
         TaskEto task = new TaskEto();
         task.setId(entity.getId());
@@ -19,7 +21,7 @@ public final class TaskMapper {
         return task;
     }
 
-    public static final TaskEntity mapToEntity(TaskEto taskTo){
+    public final TaskEntity mapToEntity(TaskEto taskTo){
 
         TaskEntity entity = new TaskEntity();
         entity.setId(taskTo.getId());
@@ -27,13 +29,5 @@ public final class TaskMapper {
         entity.setDescription(taskTo.getDescription());
         entity.setTaskType(taskTo.getTaskType());
         return entity;
-    }
-
-    public static final List<TaskEto> mapToETOList(List<TaskEntity> entities){
-        return entities.stream().map(e -> mapToETO(e)).collect(Collectors.toList());
-    }
-
-    public static final List<TaskEntity> mapToEntityList(List<TaskEto> tos){
-        return tos.stream().map(t -> mapToEntity(t)).collect(Collectors.toList());
     }
 }

@@ -20,6 +20,8 @@ import java.util.Optional;
 public class TaskServiceImpl implements TaskService {
 
     @Autowired
+    private TaskMapper taskMapper;
+    @Autowired
     private TaskRepo taskRepository;
 
     @Autowired
@@ -29,18 +31,18 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskEto save(TaskEto newTask) {
 
-        TaskEntity taskEntity = TaskMapper.mapToEntity(newTask);
+        TaskEntity taskEntity = taskMapper.mapToEntity(newTask);
         Long id = newTask.getGameId();
         Optional<GameEntity> optionalGame = gameRepository.findById(id);
         GameEntity game = optionalGame.orElse(null);
         taskEntity.setGame(game);
         taskEntity = this.taskRepository.save(taskEntity);
-        return TaskMapper.mapToETO(taskEntity);
+        return taskMapper.mapToETO(taskEntity);
     }
 
     @Override
     public List<TaskEto> findAllTasks() {
-        return TaskMapper.mapToETOList(this.taskRepository.findAll());
+        return taskMapper.mapToETOList(this.taskRepository.findAll());
     }
 
     @Override
@@ -50,14 +52,14 @@ public class TaskServiceImpl implements TaskService {
         Optional<TaskEntity> foundEntity = taskRepository.findById(id);
         if (foundEntity.isPresent()) {
             TaskEntity taskEntity = foundEntity.get();
-            TaskEntity taskToSave = TaskMapper.mapToEntity(taskEto);
+            TaskEntity taskToSave = taskMapper.mapToEntity(taskEto);
 
             try {
                 copyDiff(taskEntity, taskToSave);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
-            return TaskMapper.mapToETO(taskEntity);
+            return taskMapper.mapToETO(taskEntity);
         }
         else
             return null;
