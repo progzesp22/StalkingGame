@@ -8,6 +8,4 @@ import java.util.Optional;
 
 public interface GameRepo extends JpaRepository<GameEntity, Long> {
 
-    @Override
-    Optional<GameEntity> findById(Long aLong);
 }

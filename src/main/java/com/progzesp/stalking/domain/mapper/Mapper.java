@@ -1,11 +1,13 @@
 package com.progzesp.stalking.domain.mapper;
 
-import com.progzesp.stalking.domain.TaskEto;
-import com.progzesp.stalking.persistance.entity.TaskEntity;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper that maps between ETOs and Entities
+ * @param <A> ETO
+ * @param <B> Entity
+ */
 public interface Mapper<A, B> {
 
     A mapToETO(B entity);

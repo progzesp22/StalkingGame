@@ -10,4 +10,6 @@ public interface GameService extends Service {
     GameEto save(GameEto newGame);
 
     List<GameEto> findAllGames();
+
+    boolean deleteGame(Long id);
 }

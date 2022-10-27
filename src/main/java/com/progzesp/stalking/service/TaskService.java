@@ -11,4 +11,6 @@ public interface TaskService extends Service {
     List<TaskEto> findAllTasks();
 
     TaskEto modifyTask(Long id, TaskEto taskEto);
+
+    boolean deleteTask(Long id);
 }

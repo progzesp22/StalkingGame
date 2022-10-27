@@ -27,4 +27,14 @@ public class GameRestController {
     public GameEto addGame(@RequestBody GameEto newGame) {
         return gameService.save(newGame);
     }
+
+    /**
+     * Deletes the game alongside with all the tasks assigned to it.
+     * @param id id of the object to delete.
+     * @return true if delete successful. False if object with this id does not exist or delete unsuccessful.
+     */
+    @DeleteMapping("/{id}")
+    public boolean deleteGame(@PathVariable("id") Long id) {
+        return gameService.deleteGame(id);
+    }
 }

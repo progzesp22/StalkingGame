@@ -47,7 +47,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskEto modifyTask(Long id, TaskEto taskEto) {
-        Objects.requireNonNull(taskEto, "game");
 
         Optional<TaskEntity> foundEntity = taskRepository.findById(id);
         if (foundEntity.isPresent()) {
@@ -55,7 +54,7 @@ public class TaskServiceImpl implements TaskService {
             TaskEntity taskToSave = taskMapper.mapToEntity(taskEto);
 
             try {
-                copyDiff(taskEntity, taskToSave);
+                copyNonStaticNonNull(taskEntity, taskToSave);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -63,5 +62,18 @@ public class TaskServiceImpl implements TaskService {
         }
         else
             return null;
+    }
+
+    @Override
+    public boolean deleteTask(Long id) {
+
+        Optional<TaskEntity> taskOptional = taskRepository.findById(id);
+        if (taskOptional.isEmpty()) {
+            return false;
+        }
+        else {
+            taskRepository.delete(taskOptional.get());
+            return taskRepository.findById(id).isEmpty();
+        }
     }
 }

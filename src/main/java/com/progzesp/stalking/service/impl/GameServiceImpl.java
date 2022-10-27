@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -22,9 +23,6 @@ public class GameServiceImpl implements GameService {
     private GameMapper gameMapper;
     @Autowired
     private GameRepo gameRepository;
-    @Autowired
-    private TaskRepo taskRepository;
-
 
     @Override
     public GameEto save(GameEto newGame) {
@@ -37,5 +35,17 @@ public class GameServiceImpl implements GameService {
     @Override
     public List<GameEto> findAllGames() {
         return gameMapper.mapToETOList(this.gameRepository.findAll());
+    }
+
+    @Override
+    public boolean deleteGame(Long id) {
+        Optional<GameEntity> gameOptional = gameRepository.findById(id);
+        if (gameOptional.isEmpty()) {
+            return false;
+        }
+        else {
+            gameRepository.delete(gameOptional.get());
+            return gameRepository.findById(id).isEmpty();
+        }
     }
 }

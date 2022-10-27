@@ -2,10 +2,7 @@ package com.progzesp.stalking.persistance.entity;
 
 import org.springframework.lang.Nullable;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -13,7 +10,7 @@ import java.util.List;
 public class GameEntity extends AbstractEntity {
 
     //TODO add more fields
-    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<TaskEntity> taskEntityList;
 
     public List<TaskEntity> getTaskEntityList() {

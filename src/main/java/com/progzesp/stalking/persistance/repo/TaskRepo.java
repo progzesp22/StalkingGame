@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface TaskRepo extends JpaRepository<TaskEntity, Long> {
 
-    @Override
-    List<TaskEntity> findAllById(Iterable<Long> longs);
 }

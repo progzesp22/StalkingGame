@@ -29,8 +29,18 @@ public class TaskRestController {
 
     //NOTE: PUT mapping requests to send all parameters again.
     // If we only need to change some fields we might change to PATCH mapping later.
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public TaskEto modifyTask(@PathVariable("id") Long id, @RequestBody TaskEto taskEto) {
         return taskService.modifyTask(id ,taskEto);
+    }
+
+    /**
+     * Deletes the task with specified id.
+     * @param id id of the object to delete.
+     * @return true if delete successful. False if object with this id does not exist or delete unsuccessful.
+     */
+    @DeleteMapping("/{id}")
+    public boolean deleteTask(@PathVariable("id") Long id) {
+        return taskService.deleteTask(id);
     }
 }
