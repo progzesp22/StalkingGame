@@ -1,7 +1,5 @@
 package com.progzesp.stalking.persistance.entity;
 
-import org.springframework.lang.Nullable;
-
 import javax.persistence.*;
 import java.util.List;
 
