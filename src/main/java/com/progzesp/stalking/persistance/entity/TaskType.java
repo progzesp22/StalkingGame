@@ -4,6 +4,7 @@ public enum TaskType {
 
     PHOTO,
     LOCALIZATION,
-    QR_CODE
+    QR_CODE,
+    TEXT
 
 }
