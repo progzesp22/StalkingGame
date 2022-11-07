@@ -29,7 +29,7 @@ public class TaskRestController {
 
     //NOTE: PUT mapping requests to send all parameters again.
     // If we only need to change some fields we might change to PATCH mapping later.
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public TaskEto modifyTask(@PathVariable("id") Long id, @RequestBody TaskEto taskEto) {
         return taskService.modifyTask(id ,taskEto);
     }
