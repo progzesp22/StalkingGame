@@ -1,19 +1,24 @@
 package com.progzesp.stalking.domain;
 
-import com.progzesp.stalking.persistance.entity.TaskType;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
 public class AnswerEto extends AbstractEto {
 
-   private String response;
+    private Long userId;
+
+    private String response;
 
     private boolean approved;
 
     private boolean checked;
 
     private Long taskId;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public Long getTaskId() {
         return taskId;

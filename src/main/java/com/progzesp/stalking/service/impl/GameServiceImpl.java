@@ -5,8 +5,10 @@ import com.progzesp.stalking.domain.mapper.GameMapper;
 import com.progzesp.stalking.domain.mapper.TaskMapper;
 import com.progzesp.stalking.persistance.entity.GameEntity;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
+import com.progzesp.stalking.persistance.entity.UserEntity;
 import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.TaskRepo;
+import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,19 @@ public class GameServiceImpl implements GameService {
     @Autowired
     private GameRepo gameRepository;
 
+    @Autowired
+    private UserRepo userRepo;
+
     @Override
     public GameEto save(GameEto newGame) {
 
         GameEntity gameEntity = gameMapper.mapToEntity(newGame);
+
+        Long id = newGame.getGameMasterId();
+        Optional<UserEntity> optionalGM = userRepo.findById(id);
+        UserEntity gm = optionalGM.orElse(null);
+
+        gameEntity.setGameMaster(gm);
         gameEntity = this.gameRepository.save(gameEntity);
         return gameMapper.mapToETO(gameEntity);
     }

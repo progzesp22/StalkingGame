@@ -33,7 +33,7 @@ public class AnswerRestController {
         return answerService.save(newAnswer);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public AnswerEto modifyAnswer(@PathVariable("id") Long id, @RequestBody AnswerEto answerEto) {
         return answerService.modifyAnswer(id, answerEto);
     }

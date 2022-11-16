@@ -2,21 +2,46 @@ package com.progzesp.stalking.persistance.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name = "task")
 public class TaskEntity extends AbstractEntity {
 
+    @NotNull
     private String name;
 
     private String description;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private TaskType taskType;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private GameEntity game;
+
+    @NotNull
+    private int points;
+
+    @OneToMany()
+    private List<TaskEntity> prerequisiteTasks;
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public List<TaskEntity> getPrerequisiteTasks() {
+        return prerequisiteTasks;
+    }
+
+    public void setPrerequisiteTasks(List<TaskEntity> prerequisiteTasks) {
+        this.prerequisiteTasks = prerequisiteTasks;
+    }
 
     @Transient
     public Long getGameId() {

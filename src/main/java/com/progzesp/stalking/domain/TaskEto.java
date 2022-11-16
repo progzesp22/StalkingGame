@@ -4,6 +4,7 @@ import com.progzesp.stalking.persistance.entity.TaskType;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.util.List;
 
 public class TaskEto extends AbstractEto {
 
@@ -12,9 +13,29 @@ public class TaskEto extends AbstractEto {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private TaskType taskType;
+    private TaskType type;
 
     private Long gameId;
+
+    private int points;
+
+    private List<Long> prerequisiteTasks;
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public List<Long> getPrerequisiteTasks() {
+        return prerequisiteTasks;
+    }
+
+    public void setPrerequisiteTasks(List<Long> prerequisiteTasks) {
+        this.prerequisiteTasks = prerequisiteTasks;
+    }
 
     public Long getGameId() {
         return gameId;
@@ -40,11 +61,11 @@ public class TaskEto extends AbstractEto {
         this.description = description;
     }
 
-    public TaskType getTaskType() {
-        return taskType;
+    public TaskType getType() {
+        return type;
     }
 
-    public void setTaskType(TaskType taskType) {
-        this.taskType = taskType;
+    public void setType(TaskType type) {
+        this.type = type;
     }
 }
