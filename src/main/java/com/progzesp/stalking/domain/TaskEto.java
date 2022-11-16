@@ -1,6 +1,5 @@
 package com.progzesp.stalking.domain;
 
-import com.progzesp.stalking.persistance.entity.TaskEntity;
 import com.progzesp.stalking.persistance.entity.TaskType;
 
 import javax.persistence.EnumType;
@@ -14,13 +13,13 @@ public class TaskEto extends AbstractEto {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private TaskType taskType;
+    private TaskType type;
 
     private Long gameId;
 
     private int points;
 
-    private List<Long> requiredTasks;
+    private List<Long> prerequisiteTasks;
 
     public int getPoints() {
         return points;
@@ -30,12 +29,12 @@ public class TaskEto extends AbstractEto {
         this.points = points;
     }
 
-    public List<Long> getRequiredTasks() {
-        return requiredTasks;
+    public List<Long> getPrerequisiteTasks() {
+        return prerequisiteTasks;
     }
 
-    public void setRequiredTasks(List<Long> requiredTasks) {
-        this.requiredTasks = requiredTasks;
+    public void setPrerequisiteTasks(List<Long> prerequisiteTasks) {
+        this.prerequisiteTasks = prerequisiteTasks;
     }
 
     public Long getGameId() {
@@ -62,11 +61,11 @@ public class TaskEto extends AbstractEto {
         this.description = description;
     }
 
-    public TaskType getTaskType() {
-        return taskType;
+    public TaskType getType() {
+        return type;
     }
 
-    public void setTaskType(TaskType taskType) {
-        this.taskType = taskType;
+    public void setType(TaskType type) {
+        this.type = type;
     }
 }

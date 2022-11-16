@@ -25,7 +25,7 @@ public class TaskEntity extends AbstractEntity {
     private int points;
 
     @OneToMany()
-    private List<TaskEntity> requiredTasks;
+    private List<TaskEntity> prerequisiteTasks;
 
     public int getPoints() {
         return points;
@@ -35,12 +35,12 @@ public class TaskEntity extends AbstractEntity {
         this.points = points;
     }
 
-    public List<TaskEntity> getRequiredTasks() {
-        return requiredTasks;
+    public List<TaskEntity> getPrerequisiteTasks() {
+        return prerequisiteTasks;
     }
 
-    public void setRequiredTasks(List<TaskEntity> requiredTasks) {
-        this.requiredTasks = requiredTasks;
+    public void setPrerequisiteTasks(List<TaskEntity> prerequisiteTasks) {
+        this.prerequisiteTasks = prerequisiteTasks;
     }
 
     @Transient
