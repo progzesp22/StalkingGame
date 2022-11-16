@@ -17,6 +17,7 @@ public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
         answerEto.setTaskId(entity.getTaskId());
         answerEto.setApproved(entity.isApproved());
         answerEto.setChecked(entity.isChecked());
+        answerEto.setUserId(entity.getUserId());
         return answerEto;
     }
 
