@@ -10,6 +10,10 @@ import javax.validation.constraints.NotNull;
 public class AnswerEntity extends AbstractEntity {
 
     @NotNull
+    @ManyToOne
+    private UserEntity user;
+
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     private TaskEntity task;
 
@@ -40,6 +44,34 @@ public class AnswerEntity extends AbstractEntity {
             taskEntity.setId(taskId);
             this.task = taskEntity;
         }
+    }
+
+    @Transient
+    public Long getUserId() {
+
+        if (this.user == null) {
+            return null;
+        }
+        return this.user.getId();
+    }
+
+    public void setUserId(Long userId) {
+
+        if (userId == null) {
+            this.user = null;
+        } else {
+            UserEntity userEntity = new UserEntity();
+            userEntity.setId(userId);
+            this.user = userEntity;
+        }
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public TaskEntity getTask() {
@@ -74,5 +106,4 @@ public class AnswerEntity extends AbstractEntity {
         return checked;
     }
 
-    //TODO USER
 }
