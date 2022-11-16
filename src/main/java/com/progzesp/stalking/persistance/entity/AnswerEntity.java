@@ -9,7 +9,8 @@ import javax.validation.constraints.NotNull;
 @Table(name = "answer")
 public class AnswerEntity extends AbstractEntity {
 
-    @NotNull
+    //TODO: odkomentować @NotNull przy user, przypisywać wartość na podstawie session tokena w POST answer
+    //@NotNull
     @ManyToOne
     private UserEntity user;
 
