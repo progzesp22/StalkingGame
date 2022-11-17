@@ -26,9 +26,20 @@ public class DataLoader implements ApplicationRunner {
         user.setUsername("siema");
         user.setPassword("123");
         userRepo.save(user);
+        createRandomUsers(5);
         GameEto gameEto = new GameEto();
         gameEto.setStartDate(new Date());
-        gameEto.setGameMasterId(userRepo.findAll().get(0).getId());
+        gameEto.setGameMasterId(user.getId());
         gameService.save(gameEto);
     }
+
+    private void createRandomUsers(int n) {
+        for(int i = 0; i < n; i++) {
+            UserEntity user = new UserEntity();
+            user.setUsername("user" + i);
+            user.setPassword("password" + i);
+            userRepo.save(user);
+        }
+    }
+
 }
