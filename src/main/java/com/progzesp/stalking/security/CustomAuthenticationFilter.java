@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +24,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-	// TODO generate secret key
-	private final String secretKey = "UPtq0DTb2S";
 	private final long expirationTime = (long) 1000 * 60 * 60 * 24;
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
 	private AuthenticationManager authenticationManager;
 
@@ -54,7 +54,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		response.setContentType(APPLICATION_JSON_VALUE);
 		Map<String, String> body = new HashMap<>();
 		body.put("sessionToken", token);
-		body.put("validUntil", expirationDate.toString());
+		body.put("validUntil", dateFormat.format(expirationDate));
 		new ObjectMapper().writeValue(response.getOutputStream(), body);
 	}
 }

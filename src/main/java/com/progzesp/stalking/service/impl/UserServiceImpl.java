@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         UserEntity userEntity = userMapper.mapToEntity(newTask);
         Long id = newTask.getTeamId();
-        Optional<TeamEntity> optionalTeam = teamRepo.findById(id);
+        Optional<TeamEntity> optionalTeam = id != null ? teamRepo.findById(id) : Optional.empty();
         TeamEntity team = optionalTeam.orElse(null);
         userEntity.setTeam(team);
         userEntity = this.userRepo.save(userEntity);
