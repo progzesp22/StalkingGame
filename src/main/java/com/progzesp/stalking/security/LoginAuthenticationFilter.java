@@ -22,14 +22,14 @@ import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-	private final long expirationTime = (long) 1000 * 60 * 60 * 24;
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+	private final long expirationTime = (long) 1000 * 60 * 60 * 24;
 
 	private AuthenticationManager authenticationManager;
 
-	public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
+	public LoginAuthenticationFilter(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
 	}
 
@@ -44,13 +44,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 		User user = (User) authResult.getPrincipal();
-		Algorithm algorithm = Algorithm.HMAC256("secret");
 		Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
-		String token = JWT.create()
-				.withSubject(user.getUsername())
-				.withExpiresAt(expirationDate)
-				.withIssuer(request.getRequestURL().toString())
-				.sign(algorithm);
+		String token = JwtTokenUtils.generateToken(user.getUsername(), request.getRequestURL().toString(), expirationDate);
 		response.setContentType(APPLICATION_JSON_VALUE);
 		Map<String, String> body = new HashMap<>();
 		body.put("sessionToken", token);
