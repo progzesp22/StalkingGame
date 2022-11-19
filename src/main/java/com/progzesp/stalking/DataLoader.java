@@ -32,9 +32,7 @@ public class DataLoader implements ApplicationRunner {
         user.setPassword(encoded("123"));
         user = userService.save(user);
         createRandomUsers(5);
-        GameEto gameEto = new GameEto();
-        gameEto.setStartDate(new Date());
-        gameEto.setGameMasterId(user.getId());
+        GameEto gameEto = new GameEto(user.getId());
         gameService.save(gameEto);
     }
 

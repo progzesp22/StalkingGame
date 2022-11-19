@@ -27,6 +27,9 @@ public class GameEntity extends AbstractEntity {
     @NotNull
     private Date startDate;
 
+    @NotNull
+    private GameState state;
+
     //TODO add endCondition
 
     @Transient
@@ -95,5 +98,12 @@ public class GameEntity extends AbstractEntity {
 
     public void setTaskEntityList(List<TaskEntity> taskEntityList) {
         this.taskEntityList = taskEntityList;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
+    public GameState getState() {
+        return state;
     }
 }
