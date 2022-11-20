@@ -2,6 +2,7 @@ package com.progzesp.stalking;
 
 import com.progzesp.stalking.domain.GameEto;
 import com.progzesp.stalking.domain.UserEto;
+import com.progzesp.stalking.persistance.entity.GameState;
 import com.progzesp.stalking.persistance.entity.UserEntity;
 import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.GameService;
@@ -33,7 +34,8 @@ public class DataLoader implements ApplicationRunner {
         user = userService.save(user);
         createRandomUsers(5);
         GameEto gameEto = new GameEto(user.getId());
-        gameService.save(gameEto);
+        gameEto = gameService.save(gameEto);
+        gameService.openWaitingRoom(gameEto.getId());
     }
 
     private void createRandomUsers(int n) {
