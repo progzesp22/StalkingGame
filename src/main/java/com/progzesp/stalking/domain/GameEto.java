@@ -81,7 +81,9 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
         this.state = state;
     }
 
-    public GameEto() {}
+    public GameEto() {
+        this.setState(GameState.SETTING_UP);
+    }
 
     public GameEto(Long gameMasterId) {
         this.setGameMasterId(gameMasterId);
