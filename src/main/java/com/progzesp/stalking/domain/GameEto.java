@@ -1,11 +1,14 @@
 package com.progzesp.stalking.domain;
 
+import com.progzesp.stalking.persistance.entity.GameState;
 import com.progzesp.stalking.persistance.entity.UserEntity;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Date;
 import java.util.List;
 
-public class GameEto extends AbstractEto {
+public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
     private List<Long> taskEntityList;
 
@@ -18,6 +21,9 @@ public class GameEto extends AbstractEto {
     private int numberOfPlayersInTeam;
 
     private Date startDate;
+
+    @Enumerated(EnumType.STRING)
+    private GameState state;
 
     public Long getGameMasterId() {
         return gameMasterId;
@@ -65,5 +71,23 @@ public class GameEto extends AbstractEto {
 
     public void setTaskEntityList(List<Long> taskEntityList) {
         this.taskEntityList = taskEntityList;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
+
+    public GameEto() {
+        this.setState(GameState.SETTING_UP);
+    }
+
+    public GameEto(Long gameMasterId) {
+        this.setGameMasterId(gameMasterId);
+        this.setStartDate(new Date());
+        this.setState(GameState.SETTING_UP);
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/rest/tasks")
@@ -16,11 +18,19 @@ public class TaskRestController {
     private TaskService taskService;
 
 
+    @GetMapping(params = "gameId")
+    public ResponseEntity<List<TaskEto>> findGameTasks(@RequestParam Long gameId) {
+        System.out.println("hello");
+        List<TaskEto> allTasks = this.taskService.findAllTasks();
+        List<TaskEto> gameTasks = allTasks.stream().filter(p -> Objects.equals(p.getGameId(), gameId)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(gameTasks);
+    }
     @GetMapping()
     public ResponseEntity<List<TaskEto>> findAllTasks() {
         final List<TaskEto> allTasks = this.taskService.findAllTasks();
         return ResponseEntity.ok().body(allTasks);
     }
+
 
     @PostMapping()
     public TaskEto addTask(@RequestBody TaskEto newTask) {
