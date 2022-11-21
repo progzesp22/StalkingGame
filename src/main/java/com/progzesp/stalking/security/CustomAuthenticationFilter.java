@@ -22,14 +22,14 @@ import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 	private final long expirationTime = (long) 1000 * 60 * 60 * 24;
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
 
 	private AuthenticationManager authenticationManager;
 
-	public LoginAuthenticationFilter(AuthenticationManager authenticationManager) {
+	public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
 		this.authenticationManager = authenticationManager;
 	}
 
@@ -44,8 +44,13 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 		User user = (User) authResult.getPrincipal();
+		Algorithm algorithm = Algorithm.HMAC256("secret");
 		Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
-		String token = JwtTokenUtils.generateToken(user.getUsername(), request.getRequestURL().toString(), expirationDate);
+		String token = JWT.create()
+				.withSubject(user.getUsername())
+				.withExpiresAt(expirationDate)
+				.withIssuer(request.getRequestURL().toString())
+				.sign(algorithm);
 		response.setContentType(APPLICATION_JSON_VALUE);
 		Map<String, String> body = new HashMap<>();
 		body.put("sessionToken", token);
