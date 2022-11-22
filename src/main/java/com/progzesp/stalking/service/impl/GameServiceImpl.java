@@ -59,4 +59,13 @@ public class GameServiceImpl implements GameService {
             return gameRepository.findById(id).isEmpty();
         }
     }
+
+    @Override
+    public Optional<GameEto> findGameById(Long id){
+        Optional<GameEntity> game = gameRepository.findById(id);
+        if(game.isPresent()){
+            return Optional.of(gameMapper.mapToETO(game.get()));
+        }
+        return Optional.empty();
+    }
 }

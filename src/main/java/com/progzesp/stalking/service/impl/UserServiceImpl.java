@@ -52,4 +52,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         // TODO add some permissions?
         return new User(userEntity.getUsername(), userEntity.getPassword(), authorities);
     }
+
+    @Override
+    public UserEto getByUsername(String username){
+        return userMapper.mapToETO(userRepo.getByUsername(username));
+    }
 }

@@ -6,4 +6,6 @@ public interface UserService extends Service {
 
     UserEto save(UserEto newTask);
 
+    UserEto getByUsername(String username);
+
 }
