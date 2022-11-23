@@ -2,11 +2,14 @@ package com.progzesp.stalking.service;
 
 import com.progzesp.stalking.domain.TaskEto;
 
+import java.security.Principal;
 import java.util.List;
+
+import org.springframework.data.util.Pair;
 
 public interface TaskService extends Service {
 
-    TaskEto save(TaskEto newTask);
+    Pair<Integer, TaskEto> save(TaskEto newTask, Principal user);
 
     List<TaskEto> findAllTasks();
 

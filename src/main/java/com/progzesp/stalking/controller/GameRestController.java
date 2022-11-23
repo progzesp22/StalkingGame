@@ -1,14 +1,11 @@
 package com.progzesp.stalking.controller;
 
 import com.progzesp.stalking.domain.GameEto;
-import com.progzesp.stalking.domain.TaskEto;
 import com.progzesp.stalking.service.GameService;
-import com.progzesp.stalking.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -21,10 +18,6 @@ public class GameRestController {
     @Autowired
     private GameService gameService;
 
-    @Autowired
-    private UserService userService;
-
-
     @GetMapping()
     public ResponseEntity<List<GameEto>> findAllGames() {
         final List<GameEto> allGames = this.gameService.findAllGames();
@@ -33,18 +26,15 @@ public class GameRestController {
 
     @PostMapping()
     public ResponseEntity<GameEto> addGame(Principal user, @RequestBody GameEto newGame) {
-        final Long userId = userService.getByUsername(user.getName()).getId();
-        if(newGame.getGameMasterId() != null){
-            if(userId == newGame.getGameMasterId()){
-                return ResponseEntity.ok().body(gameService.save(newGame));
-            }
-            else{
-                return ResponseEntity.status(400).body(null);  
-            }      
+        Pair<Integer, GameEto> response = gameService.save(newGame, user);
+        if(response.getFirst() == 200){
+            return ResponseEntity.ok().body(response.getSecond());
+        }
+        else if(response.getFirst() == 400){
+            return ResponseEntity.status(400).body(null);
         }
         else{
-            newGame.setGameMasterId(userId);
-            return ResponseEntity.ok().body(gameService.save(newGame));
+            return ResponseEntity.status(400).body(null);
         }
     }
 

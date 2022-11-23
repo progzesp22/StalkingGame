@@ -1,18 +1,15 @@
 package com.progzesp.stalking.controller;
 
-import com.progzesp.stalking.domain.GameEto;
 import com.progzesp.stalking.domain.TaskEto;
-import com.progzesp.stalking.service.GameService;
 import com.progzesp.stalking.service.TaskService;
-import com.progzesp.stalking.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/rest/tasks")
@@ -21,11 +18,6 @@ public class TaskRestController {
     @Autowired
     private TaskService taskService;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private GameService gameService;
 
 
     @GetMapping()
@@ -36,21 +28,19 @@ public class TaskRestController {
 
     @PostMapping()
     public ResponseEntity<TaskEto> addTask(Principal user, @RequestBody TaskEto newTask) {
-        final Long userId = userService.getByUsername(user.getName()).getId();
-        Optional<GameEto> game = gameService.findGameById(newTask.getGameId());
-        if(game.isPresent()){
-            final Long gameMasterId = game.get().getGameMasterId();
-            if(gameMasterId == userId){
-                return ResponseEntity.ok().body(taskService.save(newTask));
-            }
-            else{
-                return ResponseEntity.status(403).body(null);
-            }            
+        Pair<Integer, TaskEto> response = taskService.save(newTask, user);
+        if(response.getFirst() == 200){
+            return ResponseEntity.ok().body(response.getSecond());
+        }
+        else if(response.getFirst() == 403){
+            return ResponseEntity.status(403).body(null);
+        }    
+        else if(response.getFirst() == 400){
+            return ResponseEntity.status(400).body(null);
         }
         else{
-                return ResponseEntity.status(400).body(null);
+            return ResponseEntity.status(400).body(null);
         }
-
     }
 
     //NOTE: PUT mapping requests to send all parameters again.
