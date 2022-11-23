@@ -8,9 +8,11 @@ import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.TaskRepo;
 import com.progzesp.stalking.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,13 +75,17 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskEto> findTasksByCriteria(Optional<Long> gameId) {
-        List<TaskEntity> result;
+        TaskEntity toFind = new TaskEntity();
         if (gameId.isPresent()) {
-            result = this.taskRepository.findByGame_Id(gameId.get());
+            Optional<GameEntity> game = gameRepository.findById(gameId.get());
+            if (game.isPresent()) {
+                toFind.setGame(game.get());
+            }
+            else {
+                return new ArrayList<>();
+            }
         }
-        else {
-            result = this.taskRepository.findAll();
-        }
+        List<TaskEntity> result = taskRepository.findAll(Example.of(toFind));
         return taskMapper.mapToETOList(result);
     }
 }

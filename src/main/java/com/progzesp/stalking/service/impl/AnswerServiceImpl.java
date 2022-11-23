@@ -10,6 +10,7 @@ import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.TaskRepo;
 import com.progzesp.stalking.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,31 +92,25 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<AnswerEto> findAnswersByCriteria(Optional<Long> gameId, Optional<String> filter) {
-        List<AnswerEntity> result = new ArrayList<>();
+        AnswerEntity toFind = new AnswerEntity();
         if (gameId.isPresent()) {
-
-            if (filter.isPresent() && !filter.get().equals("all") ) {
-                if (filter.get().equals("checked")) {
-                    result = this.answerRepository.findByGame_IdAndChecked(gameId.get(), true);
-                } else if (filter.get().equals("unchecked")) {
-                    result = this.answerRepository.findByGame_IdAndChecked(gameId.get() ,false);
-                }
-                else {
-                    result = this.answerRepository.findByGame_Id(gameId.get());
-                }
-            }else {
-                result = this.answerRepository.findByGame_Id(gameId.get());
+            Optional<GameEntity> game = gameRepo.findById(gameId.get());
+            if (game.isPresent()) {
+                toFind.setGame(game.get());
             }
-        } else if (filter.isPresent()) {
+            else {
+                return new ArrayList<>();
+            }
+        }
+        if (filter.isPresent()) {
             if (filter.get().equals("checked")) {
-                result = this.answerRepository.findByChecked( true);
-            } else if (filter.get().equals("unchecked")) {
-                result = this.answerRepository.findByChecked( false);
+                toFind.setChecked(true);
+            }
+            else if (filter.get().equals("unchecked")) {
+                toFind.setChecked(false);
             }
         }
-        else {
-            result = this.answerRepository.findAll();
-        }
+        List<AnswerEntity> result = answerRepository.findAll(Example.of(toFind));
         return answerMapper.mapToETOList(result);
     }
 }
