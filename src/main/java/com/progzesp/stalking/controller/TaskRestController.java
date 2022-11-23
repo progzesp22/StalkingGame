@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -18,19 +19,11 @@ public class TaskRestController {
     private TaskService taskService;
 
 
-    @GetMapping(params = "gameId")
-    public ResponseEntity<List<TaskEto>> findGameTasks(@RequestParam Long gameId) {
-        System.out.println("hello");
-        List<TaskEto> allTasks = this.taskService.findAllTasks();
-        List<TaskEto> gameTasks = allTasks.stream().filter(p -> Objects.equals(p.getGameId(), gameId)).collect(Collectors.toList());
-        return ResponseEntity.ok().body(gameTasks);
-    }
     @GetMapping()
-    public ResponseEntity<List<TaskEto>> findAllTasks() {
-        final List<TaskEto> allTasks = this.taskService.findAllTasks();
-        return ResponseEntity.ok().body(allTasks);
+    public ResponseEntity<List<TaskEto>> findGameTasks(@RequestParam Optional<Long> gameId) {
+        List<TaskEto> tasks = this.taskService.findTasksByCriteria(gameId);
+        return ResponseEntity.ok().body(tasks);
     }
-
 
     @PostMapping()
     public TaskEto addTask(@RequestBody TaskEto newTask) {
@@ -39,7 +32,7 @@ public class TaskRestController {
 
     //NOTE: PUT mapping requests to send all parameters again.
     // If we only need to change some fields we might change to PATCH mapping later.
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public TaskEto modifyTask(@PathVariable("id") Long id, @RequestBody TaskEto taskEto) {
         return taskService.modifyTask(id ,taskEto);
     }

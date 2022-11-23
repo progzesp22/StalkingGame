@@ -1,7 +1,6 @@
 package com.progzesp.stalking.domain;
 
 import com.progzesp.stalking.persistance.entity.GameState;
-import com.progzesp.stalking.persistance.entity.UserEntity;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,6 +15,8 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
     private List<Long> teams;
 
+    private List<Long> answers;
+
     private int numberOfTeams;
 
     private int numberOfPlayersInTeam;
@@ -24,6 +25,14 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
     @Enumerated(EnumType.STRING)
     private GameState state;
+
+    public List<Long> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Long> answers) {
+        this.answers = answers;
+    }
 
     public Long getGameMasterId() {
         return gameMasterId;

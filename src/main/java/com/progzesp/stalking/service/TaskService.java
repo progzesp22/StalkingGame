@@ -3,14 +3,15 @@ package com.progzesp.stalking.service;
 import com.progzesp.stalking.domain.TaskEto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskService extends Service {
 
     TaskEto save(TaskEto newTask);
 
-    List<TaskEto> findAllTasks();
-
     TaskEto modifyTask(Long id, TaskEto taskEto);
 
     boolean deleteTask(Long id);
+
+    List<TaskEto> findTasksByCriteria(Optional<Long> gameId);
 }

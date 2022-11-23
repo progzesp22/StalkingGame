@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -38,11 +37,6 @@ public class TaskServiceImpl implements TaskService {
         taskEntity.setGame(game);
         taskEntity = this.taskRepository.save(taskEntity);
         return taskMapper.mapToETO(taskEntity);
-    }
-
-    @Override
-    public List<TaskEto> findAllTasks() {
-        return taskMapper.mapToETOList(this.taskRepository.findAll());
     }
 
     @Override
@@ -75,5 +69,17 @@ public class TaskServiceImpl implements TaskService {
             taskRepository.delete(taskOptional.get());
             return taskRepository.findById(id).isEmpty();
         }
+    }
+
+    @Override
+    public List<TaskEto> findTasksByCriteria(Optional<Long> gameId) {
+        List<TaskEntity> result;
+        if (gameId.isPresent()) {
+            result = this.taskRepository.findByGame_Id(gameId.get());
+        }
+        else {
+            result = this.taskRepository.findAll();
+        }
+        return taskMapper.mapToETOList(result);
     }
 }

@@ -27,6 +27,38 @@ public class AnswerEntity extends AbstractEntity {
     @NotNull
     private String response;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    private GameEntity game;
+
+    public GameEntity getGame() {
+        return game;
+    }
+
+    public void setGame(GameEntity game) {
+        this.game = game;
+    }
+
+    @Transient
+    public Long getGameId() {
+
+        if (this.game == null) {
+            return null;
+        }
+        return this.game.getId();
+    }
+
+    public void setGameId(Long gameId) {
+
+        if (gameId == null) {
+            this.game = null;
+        } else {
+            GameEntity gameEntity = new GameEntity();
+            gameEntity.setId(gameId);
+            this.game = gameEntity;
+        }
+    }
+
     @Transient
     public Long getTaskId() {
 
