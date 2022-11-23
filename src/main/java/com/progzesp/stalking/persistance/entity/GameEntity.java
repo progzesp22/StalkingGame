@@ -24,11 +24,22 @@ public class GameEntity extends AbstractEntity {
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<TaskEntity> taskEntityList;
 
+    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<AnswerEntity> answerEntityList;
+
     @NotNull
     private Date startDate;
 
     @NotNull
     private GameState state;
+
+    public List<AnswerEntity> getAnswerEntityList() {
+        return answerEntityList;
+    }
+
+    public void setAnswerEntityList(List<AnswerEntity> answerEntityList) {
+        this.answerEntityList = answerEntityList;
+    }
 
     //TODO add endCondition
 
