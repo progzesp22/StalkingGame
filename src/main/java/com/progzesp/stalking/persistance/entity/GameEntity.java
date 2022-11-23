@@ -24,8 +24,22 @@ public class GameEntity extends AbstractEntity {
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<TaskEntity> taskEntityList;
 
+    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<AnswerEntity> answerEntityList;
+
     @NotNull
     private Date startDate;
+
+    @NotNull
+    private GameState state;
+
+    public List<AnswerEntity> getAnswerEntityList() {
+        return answerEntityList;
+    }
+
+    public void setAnswerEntityList(List<AnswerEntity> answerEntityList) {
+        this.answerEntityList = answerEntityList;
+    }
 
     //TODO add endCondition
 
@@ -95,5 +109,12 @@ public class GameEntity extends AbstractEntity {
 
     public void setTaskEntityList(List<TaskEntity> taskEntityList) {
         this.taskEntityList = taskEntityList;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
+    }
+    public GameState getState() {
+        return state;
     }
 }

@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/rest/tasks")
@@ -21,9 +24,9 @@ public class TaskRestController {
 
 
     @GetMapping()
-    public ResponseEntity<List<TaskEto>> findAllTasks() {
-        final List<TaskEto> allTasks = this.taskService.findAllTasks();
-        return ResponseEntity.ok().body(allTasks);
+    public ResponseEntity<List<TaskEto>> findGameTasks(@RequestParam Optional<Long> gameId) {
+        List<TaskEto> tasks = this.taskService.findTasksByCriteria(gameId);
+        return ResponseEntity.ok().body(tasks);
     }
 
     @PostMapping()
@@ -45,7 +48,7 @@ public class TaskRestController {
 
     //NOTE: PUT mapping requests to send all parameters again.
     // If we only need to change some fields we might change to PATCH mapping later.
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public TaskEto modifyTask(@PathVariable("id") Long id, @RequestBody TaskEto taskEto) {
         return taskService.modifyTask(id ,taskEto);
     }

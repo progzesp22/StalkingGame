@@ -10,10 +10,13 @@ import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+
+import java.security.Principal;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,11 +61,6 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskEto> findAllTasks() {
-        return taskMapper.mapToETOList(this.taskRepo.findAll());
-    }
-
-    @Override
     public TaskEto modifyTask(Long id, TaskEto taskEto) {
 
         Optional<TaskEntity> foundEntity = taskRepo.findById(id);
@@ -92,5 +90,21 @@ public class TaskServiceImpl implements TaskService {
             taskRepo.delete(taskOptional.get());
             return taskRepo.findById(id).isEmpty();
         }
+    }
+
+    @Override
+    public List<TaskEto> findTasksByCriteria(Optional<Long> gameId) {
+        TaskEntity toFind = new TaskEntity();
+        if (gameId.isPresent()) {
+            Optional<GameEntity> game = gameRepo.findById(gameId.get());
+            if (game.isPresent()) {
+                toFind.setGame(game.get());
+            }
+            else {
+                return new ArrayList<>();
+            }
+        }
+        List<TaskEntity> result = taskRepo.findAll(Example.of(toFind));
+        return taskMapper.mapToETOList(result);
     }
 }

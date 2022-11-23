@@ -21,6 +21,8 @@ public class GameMapper implements Mapper<GameEto, GameEntity> {
         game.setNumberOfTeams(entity.getNumberOfTeams());
         game.setNumberOfPlayersInTeam(entity.getNumberOfPlayersInTeam());
         game.setStartDate(entity.getStartDate());
+        game.setState(entity.getState());
+        game.setAnswers(entity.getAnswerEntityList().stream().map(AbstractEntity::getId).collect(Collectors.toList()));
         return game;
     }
 
@@ -35,6 +37,8 @@ public class GameMapper implements Mapper<GameEto, GameEntity> {
         entity.setStartDate(to.getStartDate());
         entity.setTeams(new ArrayList<>());
         entity.setTaskEntityList(new ArrayList<>());
+        entity.setAnswerEntityList(new ArrayList<>());
+        entity.setState(to.getState());
         return entity;
     }
 }

@@ -1,12 +1,16 @@
 package com.progzesp.stalking.controller;
 
 import com.progzesp.stalking.domain.AnswerEto;
+import com.progzesp.stalking.domain.AnswerEtoNoResponse;
 import com.progzesp.stalking.service.AnswerService;
+import com.progzesp.stalking.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/rest/answers")
@@ -15,17 +19,15 @@ public class AnswerRestController {
     @Autowired
     private AnswerService answerService;
 
-
-    @GetMapping("/unchecked")
-    public ResponseEntity<List<AnswerEto>> findAllUncheckedAnswers() {
-        final List<AnswerEto> allTasks = this.answerService.findAllUncheckedAnswers();
-        return ResponseEntity.ok().body(allTasks);
-    }
-
     @GetMapping()
-    public ResponseEntity<List<AnswerEto>> findAllAnswers() {
-        final List<AnswerEto> allTasks = this.answerService.findAllAnswers();
-        return ResponseEntity.ok().body(allTasks);
+    public ResponseEntity<List<AnswerEtoNoResponse>> findSpecificAnswers(@RequestParam Optional<Long> gameId, @RequestParam Optional<String> filter) {
+        final List<AnswerEto> answers = this.answerService.findAnswersByCriteria( gameId, filter);
+        return ResponseEntity.ok().body(answers.stream().map(AnswerEto::makeBodyWithoutResponse).toList());
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<AnswerEto> findAnswerById(@PathVariable("id") Long id) {
+        final AnswerEto answer = this.answerService.findAnswerById(id);
+        return ResponseEntity.ok().body(answer);
     }
 
     @PostMapping()
@@ -33,7 +35,7 @@ public class AnswerRestController {
         return answerService.save(newAnswer);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public AnswerEto modifyAnswer(@PathVariable("id") Long id, @RequestBody AnswerEto answerEto) {
         return answerService.modifyAnswer(id, answerEto);
     }
