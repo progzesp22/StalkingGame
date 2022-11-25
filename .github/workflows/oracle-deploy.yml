@@ -7,15 +7,15 @@ on:
 
 jobs:
   deploy:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
 
     steps:
-    - name: Deploy the project
-      run: |
-      echo ${{secrets.ORACLE_PRIV_KEY}} > oracle_priv.key
+    - name: create private key
+      run: echo ${{secrets.ORACLE_PRIV_KEY}} > oracle_priv.key
+    - name: change key access
       chmod 700 oracle_priv.key
+    - name: execute script on oci
       ssh -o StrictHostKeyChecking=accept-new -i oracle_priv.key opc@144.24.171.255 'bash -s' < oracle-deploy.sh
