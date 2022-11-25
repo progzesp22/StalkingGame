@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - name: create private key
-      run: echo ${{secrets.ORACLE_PRIV_KEY}} > oracle_priv.key
+      run: echo "${{secrets.ORACLE_PRIV_KEY}}" > oracle_priv.key
     - name: change key access
       run: chmod 400 oracle_priv.key
     - name: execute script on oci
