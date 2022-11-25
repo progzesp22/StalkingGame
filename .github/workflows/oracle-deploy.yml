@@ -17,5 +17,11 @@ jobs:
       run: echo "${{secrets.ORACLE_PRIV_KEY}}" > oracle_priv.key
     - name: change key access
       run: chmod 400 oracle_priv.key
+    - name: create execute script
+      run: touch oracle-deploy.sh
+    - run: echo "cd StalkingGame" >> oracle-deploy.sh
+    - run: echo "git pull" >> oracle-deploy.sh
+    - run: echo "sudo /opt/apache-maven-3.8.6/bin/mvn package" >> oracle-deploy.sh
+    - run: echo "sudo systemctl restart stalkinggame.service " >> oracle-deploy.sh
     - name: execute script on oci
       run: ssh -o StrictHostKeyChecking=accept-new -i oracle_priv.key opc@144.24.171.255 'bash -s' < oracle-deploy.sh
