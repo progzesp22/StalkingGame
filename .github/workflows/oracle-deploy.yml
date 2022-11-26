@@ -3,7 +3,7 @@ name: oracle deploy
 on:
   push:
     branches:
-    - server_deploy
+    - master
 
 jobs:
   deploy:
