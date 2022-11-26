@@ -3,8 +3,7 @@ name: oracle deploy
 on:
   push:
     branches:
-    - master
-  workflow_dispatch:
+    - server_deploy
 
 jobs:
   deploy:
