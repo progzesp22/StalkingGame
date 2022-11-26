@@ -13,5 +13,7 @@ public interface TaskService extends Service {
 
     boolean deleteTask(Long id);
 
+    TaskEto findTask(Long id);
+
     List<TaskEto> findTasksByCriteria(Optional<Long> gameId);
 }

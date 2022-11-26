@@ -5,6 +5,7 @@ import com.progzesp.stalking.domain.mapper.AnswerMapper;
 import com.progzesp.stalking.persistance.entity.AnswerEntity;
 import com.progzesp.stalking.persistance.entity.GameEntity;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
+import com.progzesp.stalking.persistance.entity.answer.TextEntity;
 import com.progzesp.stalking.persistance.repo.AnswerRepo;
 import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.TaskRepo;
@@ -38,7 +39,8 @@ public class AnswerServiceImpl implements AnswerService {
     public AnswerEto save(AnswerEto newAnswer) {
 
         AnswerEntity answerEntity = answerMapper.mapToEntity(newAnswer);
-
+        if (!answerEntity.validate())
+            return null;
 
         Optional<TaskEntity> optionalTask = taskRepository.findById(newAnswer.getTaskId());
         TaskEntity taskEntity = optionalTask.orElse(null);
@@ -60,6 +62,8 @@ public class AnswerServiceImpl implements AnswerService {
             AnswerEntity answerEntity = foundEntity.get();
             AnswerEntity answerToSave = answerMapper.mapToEntity(answerEto);
 
+            if (!answerEntity.validate())
+                return null;
             try {
                 copyNonStaticNonNull(answerEntity, answerToSave);
             } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -92,7 +96,8 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<AnswerEto> findAnswersByCriteria(Optional<Long> gameId, Optional<String> filter) {
-        AnswerEntity toFind = new AnswerEntity();
+        //TODO: tu było AnswerEntity, ale teraz jest abstrakcyjne, więc trzeba coś wymyślić
+        AnswerEntity toFind = new TextEntity();
         if (gameId.isPresent()) {
             Optional<GameEntity> game = gameRepo.findById(gameId.get());
             if (game.isPresent()) {

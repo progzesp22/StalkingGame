@@ -7,7 +7,8 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "answer")
-public class AnswerEntity extends AbstractEntity {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class AnswerEntity extends AbstractEntity {
 
     //TODO: odkomentować @NotNull przy user, przypisywać wartość na podstawie session tokena w POST answer
     //@NotNull
@@ -23,9 +24,6 @@ public class AnswerEntity extends AbstractEntity {
 
     @Value("false")
     private boolean checked;
-
-    @NotNull
-    private String response;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
@@ -115,14 +113,6 @@ public class AnswerEntity extends AbstractEntity {
         this.task = task;
     }
 
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
     public boolean isApproved() {
         return approved;
     }
@@ -138,5 +128,9 @@ public class AnswerEntity extends AbstractEntity {
     public boolean isChecked() {
         return checked;
     }
+
+    //TODO: implementacja metod abstrakcyjnych w podklasach
+
+    public abstract boolean validate();
 
 }

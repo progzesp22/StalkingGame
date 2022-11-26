@@ -1,10 +1,10 @@
 package com.progzesp.stalking.domain;
 
-public class AnswerEto extends AbstractEto {
+import com.progzesp.stalking.persistance.entity.TaskType;
+
+public abstract class AnswerEto extends AbstractEto {
 
     private Long userId;
-
-    private String response;
 
     private boolean approved;
 
@@ -13,6 +13,8 @@ public class AnswerEto extends AbstractEto {
     private Long taskId;
 
     private Long gameId;
+
+    private TaskType type;
 
     public Long getGameId() {
         return gameId;
@@ -38,13 +40,6 @@ public class AnswerEto extends AbstractEto {
         this.taskId = taskId;
     }
 
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
-    public String getResponse() {
-        return response;
-    }
     public boolean isApproved() {
         return approved;
     }
@@ -59,6 +54,14 @@ public class AnswerEto extends AbstractEto {
 
     public void setChecked(boolean checked) {
         this.checked = checked;
+    }
+
+    public TaskType getType() {
+        return type;
+    }
+
+    public void setType(TaskType type) {
+        this.type = type;
     }
 
     public AnswerEtoNoResponse makeBodyWithoutResponse() {
