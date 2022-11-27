@@ -4,7 +4,9 @@ import com.progzesp.stalking.domain.UserEto;
 
 public interface UserService extends Service {
 
-    UserEto save(UserEto newTask);
+    UserEto encodePasswordAndSave(UserEto newUser);
+
+    UserEto save(UserEto newUser);
 
     UserEto getByUsername(String username);
 

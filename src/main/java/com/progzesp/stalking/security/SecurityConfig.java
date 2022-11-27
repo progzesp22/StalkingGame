@@ -5,25 +5,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 
 @Configuration
 @EnableWebSecurity
@@ -50,9 +42,10 @@ public class SecurityConfig {
 		);
 		http.authorizeRequests()
 				.antMatchers(HttpMethod.POST, "/user/login").permitAll()
+				.antMatchers(HttpMethod.POST, "/user/register").permitAll()
 				.anyRequest().authenticated().and().authenticationManager(authenticationManager);
 
-		http.apply(new CustomDsl());
+		http.apply(new UserSessionDsl());
 		return http.build();
 	}
 	@Bean

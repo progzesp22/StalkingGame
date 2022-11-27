@@ -1,4 +1,4 @@
-package com.progzesp.stalking.security;
+package com.progzesp.stalking.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
