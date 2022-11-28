@@ -38,7 +38,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 		String username, password;
 		try {
 			Map<String, String> requestMap = new ObjectMapper().readValue(request.getInputStream(), Map.class);
-			username = requestMap.get("login");
+			username = requestMap.get("username");
 			password = requestMap.get("password");
 		} catch (IOException e) {
 			throw new AuthenticationServiceException(e.getMessage(), e);
