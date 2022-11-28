@@ -1,0 +1,24 @@
+name: oracle deploy
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: create private key
+      run: echo "${{secrets.ORACLE_PRIV_KEY}}" > oracle_priv.key
+    - name: change key access
+      run: chmod 400 oracle_priv.key
+    - name: create execute script
+      run: touch oracle-deploy.sh 
+    - run: echo "sudo ./execute.sh" >> oracle-deploy.sh
+    - name: execute script on oci
+      run: ssh -o StrictHostKeyChecking=accept-new -i oracle_priv.key github@144.24.171.255 'bash -s' < oracle-deploy.sh
