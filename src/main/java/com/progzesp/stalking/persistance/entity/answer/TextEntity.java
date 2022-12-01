@@ -20,16 +20,16 @@ public class TextEntity extends NoNavPosEntity {
 
     @Override
     public String getResponseAsString() {
-        return null;
+        return text;
     }
 
     @Override
     public void setResponseFromString(String response) {
-
+        text = response;
     }
 
     @Override
     public boolean validate() {
-        return true;
+        return text.length() <= 500;
     }
 }

@@ -20,12 +20,12 @@ public class QREntity extends NoNavPosEntity {
 
     @Override
     public String getResponseAsString() {
-        return null;
+        return qrCode;
     }
 
     @Override
     public void setResponseFromString(String response) {
-
+        qrCode = response;
     }
 
     @Override

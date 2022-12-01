@@ -1,14 +1,17 @@
 package com.progzesp.stalking.persistance.entity.answer;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.nio.charset.StandardCharsets;
 
 @Entity
 @Table(name = "answer_audio")
-public class AudioEntity extends NoNavPosEntity {
+public class AudioEntity extends FileEntity {
+    @Transient
+    private static final byte[][] MPEG_HEADERS = {{(byte) 0x47}, {(byte) 0x00, (byte) 0x00, (byte) 0x01, (byte) 0xBA},
+            {(byte) 0x00, (byte) 0x00, (byte) 0x01, (byte) 0xB3},
+            {(byte) 0x66, (byte) 0x74, (byte) 0x79, (byte) 0x70, (byte) 0x69, (byte) 0x73, (byte) 0x6F, (byte) 0x6D}};
+
     @Lob
     @Basic
     @NotNull
@@ -24,16 +27,20 @@ public class AudioEntity extends NoNavPosEntity {
 
     @Override
     public String getResponseAsString() {
-        return null;
+        return new String(audio, StandardCharsets.UTF_8);
     }
 
     @Override
     public void setResponseFromString(String response) {
-
+        audio = response.getBytes(StandardCharsets.UTF_8);
     }
 
     @Override
     public boolean validate() {
-        return true;
+        for (byte[] header : MPEG_HEADERS) {
+            if (startsWithPattern(audio, header))
+                return true;
+        }
+        return false;
     }
 }
