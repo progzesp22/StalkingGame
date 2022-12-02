@@ -21,7 +21,7 @@ public class MessagesRestController {
     private GameService gameService;
 
     @GetMapping()
-    public ResponseEntity<List<MessageEto>> findSpecificAnswers(@RequestParam Optional<Long> gameId, @RequestParam Optional<Long> newerThan) {
+    public ResponseEntity<List<MessageEto>> getGameMessages(@RequestParam Optional<Long> gameId, @RequestParam Optional<Long> newerThan) {
         final Pair<Integer, List<MessageEto> > response = gameService.findMessagesByCriteria( gameId, newerThan);
         if(response.getFirst() == 200){
             return ResponseEntity.ok().body(response.getSecond());
@@ -34,8 +34,14 @@ public class MessagesRestController {
         }
     }
     @PostMapping()
-    public MessageEto addAnswer(@RequestBody MessageInputEto newMessage) {
-        return gameService.addMessage(newMessage);
+    public ResponseEntity<MessageEto> addMessage(@RequestBody MessageInputEto newMessage) {
+        final Pair<Integer, MessageEto > response = gameService.addMessage(newMessage);
+        if(response.getFirst() == 200){
+            return ResponseEntity.ok().body(response.getSecond());
+        }
+        else{
+            return ResponseEntity.status(400).body(null);
+        }
     }
 
 

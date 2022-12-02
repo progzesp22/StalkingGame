@@ -164,10 +164,10 @@ public class GameServiceImpl implements GameService {
 
     }
 
-    public MessageEto addMessage(MessageInputEto input) {
+    public Pair<Integer, MessageEto > addMessage(MessageInputEto input) {
         Optional<GameEntity> gameOptional = gameRepo.findById(input.getGameId());
         if (gameOptional.isEmpty()) {
-            return null;
+            return Pair.of(400,new MessageEto());
         }
         else {
             GameEntity gameEntity = gameOptional.get();
@@ -176,7 +176,7 @@ public class GameServiceImpl implements GameService {
             //messageEntity.setGame(gameEntity);
             messageRepo.save(messageEntity);
             gameEntity.addMessage(messageEntity);
-            return messageMapper.mapToETO(messageEntity);
+            return Pair.of(200,messageMapper.mapToETO(messageEntity));
         }
     }
 }
