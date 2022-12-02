@@ -12,6 +12,7 @@ import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -137,21 +138,30 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<MessageEto> findMessagesByCriteria(Optional<Long> gameId, Optional<Long> newerThan) {
+    public Pair <Integer, List<MessageEto> > findMessagesByCriteria(Optional<Long> gameId, Optional<Long> newerThan) {
         List<MessageEntity> messages = null;
         if (gameId.isPresent()) {
             Optional<GameEntity> game = gameRepo.findById(gameId.get());
             if (game.isPresent()) {
                 messages = game.get().getMessages();
+                if (messages != null) {
+                    if (newerThan.isPresent()) {
+                        messages = messages.stream().filter(x -> x.getId() > newerThan.get()).collect(Collectors.toList());
+                    }
+                    return Pair.of(200, messageMapper.mapToETOList(messages));
+                }
+                else {
+                    return Pair.of(200, messageMapper.mapToETOList(new ArrayList<>()));
+                }
             }
             else {
-                return new ArrayList<>();
+                return Pair.of(400, new ArrayList<>());
             }
         }
-        if (newerThan.isPresent() && messages != null) {
-            messages = messages.stream().filter(x -> x.getId() > newerThan.get()).collect(Collectors.toList());
+        else {
+            return Pair.of(400, new ArrayList<>());
         }
-        return messageMapper.mapToETOList(messages);
+
     }
 
     public MessageEto addMessage(MessageInputEto input) {

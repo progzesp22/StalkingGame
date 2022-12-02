@@ -30,7 +30,7 @@ public interface GameService extends Service {
 
     Optional<GameEto> findGameById(Long id);
 
-    List<MessageEto> findMessagesByCriteria(Optional<Long> gameId, Optional<Long> newerThan);
+    Pair <Integer, List<MessageEto> >findMessagesByCriteria(Optional<Long> gameId, Optional<Long> newerThan);
 
     MessageEto addMessage(MessageInputEto input);
 }
