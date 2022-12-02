@@ -8,9 +8,11 @@ import com.progzesp.stalking.service.AnswerService;
 import com.progzesp.stalking.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,27 +27,45 @@ public class AnswerRestController {
     private final Gson gson = new Gson();
 
     @GetMapping()
-    public ResponseEntity<List<AnswerEtoNoResponse>> findSpecificAnswers(@RequestParam Optional<Long> gameId, @RequestParam Optional<String> filter) {
-        final List<AnswerEto> answers = this.answerService.findAnswersByCriteria( gameId, filter);
-        return ResponseEntity.ok().body(answers.stream().map(AnswerEto::makeBodyWithoutResponse).toList());
+    public ResponseEntity<List<AnswerEtoNoResponse>> findSpecificAnswers(Principal user, @RequestParam Optional<Long> gameId, @RequestParam Optional<String> filter) {
+        final Pair<Integer, List<AnswerEto>> answers = this.answerService.findAnswersByCriteria(gameId, filter, user);
+        Integer statusCode = answers.getFirst();
+        if(statusCode == 200) {
+            return ResponseEntity.ok().body(answers.getSecond().stream().map(AnswerEto::makeBodyWithoutResponse).toList());
+        }
+        return ResponseEntity.status(statusCode).body(null);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<AnswerEto> findAnswerById(@PathVariable("id") Long id) {
-        final AnswerEto answer = this.answerService.findAnswerById(id);
-        return ResponseEntity.ok().body(answer);
+    public ResponseEntity<AnswerEto> findAnswerById(Principal user, @PathVariable("id") Long id) {
+        final Pair<Integer, AnswerEto> answer = this.answerService.findAnswerById(id, user);
+        Integer statusCode = answer.getFirst();
+        if (statusCode == 200) {
+            return ResponseEntity.ok().body(answer.getSecond());
+        }
+        return ResponseEntity.status(statusCode).body(null);
     }
 
     @PostMapping()
-    public AnswerEto addAnswer(HttpEntity<String> httpEntity) {
+    public ResponseEntity<AnswerEto> addAnswer(Principal user, HttpEntity<String> httpEntity) {
         AnswerEto newAnswer = getAnswerFromHttpEntity(httpEntity);
         if (newAnswer == null)
-            return null;
-        return answerService.save(newAnswer);
+            return ResponseEntity.status(400).body(null);;
+        Pair<Integer, AnswerEto> response = answerService.save(newAnswer, user);
+        Integer statusCode = response.getFirst();
+        if(statusCode == 200) {
+            return ResponseEntity.ok().body(response.getSecond());
+        }
+        return ResponseEntity.status(statusCode).body(null);
     }
 
     @PatchMapping("/{id}")
-    public AnswerEto modifyAnswer(@PathVariable("id") Long id, ModifyAnswerEto eto) {
-        return answerService.modifyAnswer(id, eto);
+    public ResponseEntity<ModifyAnswerEto> modifyAnswer(Principal user, @PathVariable("id") Long id, ModifyAnswerEto answerEto) {
+        Pair<Integer, ModifyAnswerEto> response = answerService.modifyAnswer(id, answerEto, user);
+        Integer statusCode = response.getFirst();
+        if(statusCode == 200) {
+            return ResponseEntity.ok().body(response.getSecond());
+        }
+        return ResponseEntity.status(statusCode).body(null);
     }
 
     /**

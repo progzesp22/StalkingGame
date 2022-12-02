@@ -59,6 +59,14 @@ public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
         return answerEntity;
     }
 
+    public final ModifyAnswerEto mapToModifyAnswerETO(AnswerEntity entity) {
+        ModifyAnswerEto answerEto = new ModifyAnswerEto();
+        answerEto.setApproved(entity.isApproved());
+        answerEto.setChecked(entity.isChecked());
+        answerEto.setScore(entity.getScore());
+        return answerEto;
+    }
+
     public AnswerEntity fromTypeToEntity(TaskType taskType) {
         return switch (taskType) {
             case AUDIO -> new AudioEntity();

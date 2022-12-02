@@ -9,6 +9,7 @@ import com.progzesp.stalking.persistance.repo.TaskRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.util.Pair;
 
 import java.security.Principal;
@@ -39,7 +40,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Pair<Integer, TaskEto> save(TaskEto newTask, Principal user){
-        System.out.println("TEST");
         Optional<GameEntity> game = gameRepo.findById(newTask.getGameId());
         TaskEntity taskEntity = taskMapper.mapToEntity(newTask);   
         if(game.isPresent()){
@@ -129,7 +129,8 @@ public class TaskServiceImpl implements TaskService {
                 return new ArrayList<>();
             }
         }
-        List<TaskEntity> result = taskRepo.findAll(Example.of(toFind));
+        ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnorePaths("points");
+        List<TaskEntity> result = taskRepo.findAll(Example.of(toFind, exampleMatcher));
         return taskMapper.mapToETOList(result);
     }
 }
