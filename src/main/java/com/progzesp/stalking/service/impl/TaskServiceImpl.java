@@ -39,6 +39,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Pair<Integer, TaskEto> save(TaskEto newTask, Principal user){
+        System.out.println("TEST");
         Optional<GameEntity> game = gameRepo.findById(newTask.getGameId());
         TaskEntity taskEntity = taskMapper.mapToEntity(newTask);   
         if(game.isPresent()){
@@ -47,6 +48,20 @@ public class TaskServiceImpl implements TaskService {
             final Long gameMasterId = game.get().getGameMasterId();
 
             taskEntity.setGame(game.get());
+
+            List<TaskEntity> prerequisiteTasks = new ArrayList<>();
+
+            for(Long taskId : newTask.getPrerequisiteTasks()) {
+                Optional<TaskEntity> optionalPrerequisiteTask = taskRepo.findById(taskId);
+                if(optionalPrerequisiteTask.isPresent()) {
+                    TaskEntity prerequisiteTask = optionalPrerequisiteTask.get();
+                    if(prerequisiteTask.getGameId() == taskEntity.getGameId()) {
+                        prerequisiteTasks.add(prerequisiteTask);
+                    }
+                }
+            }
+
+            taskEntity.setPrerequisiteTasks(prerequisiteTasks);
 
             if(gameMasterId == userId){
                 return Pair.of(200, taskMapper.mapToETO(taskRepo.save(taskEntity)));// ResponseEntity.ok().body(taskService.save(newTask, user));
