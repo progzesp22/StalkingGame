@@ -62,6 +62,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         UserEntity userEntity = userRepo.getByUsername(username);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         // TODO add some permissions?
+        if(userEntity == null) {
+            return new User(" ", " ", new ArrayList<>());
+        }
         return new User(userEntity.getUsername(), userEntity.getPassword(), authorities);
     }
 

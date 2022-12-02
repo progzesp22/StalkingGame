@@ -42,5 +42,5 @@ public class AnswerEtoNoResponse extends AbstractEto {
     public void setChecked(boolean checked) {
         this.checked = checked;
     }
-    //TODO USER
+
 }

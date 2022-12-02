@@ -70,6 +70,4 @@ public class AnswerEto extends AbstractEto {
         newBody.setId(this.getId());
         return  newBody;
     }
-
-    //TODO USER
 }
