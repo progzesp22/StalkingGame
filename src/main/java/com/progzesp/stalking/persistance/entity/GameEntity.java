@@ -1,5 +1,6 @@
 package com.progzesp.stalking.persistance.entity;
 
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -26,6 +27,9 @@ public class GameEntity extends AbstractEntity {
 
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<AnswerEntity> answerEntityList;
+
+    @OneToMany//(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<MessageEntity> messages;
 
     @NotNull
     private Date startDate;
@@ -116,5 +120,16 @@ public class GameEntity extends AbstractEntity {
     }
     public GameState getState() {
         return state;
+    }
+
+    public List<MessageEntity> getMessages() {
+        return messages;
+    }
+    public void setMessages(List<MessageEntity> messages) {
+        this.messages = messages;
+    }
+
+    public void addMessage(MessageEntity message) {
+        messages.add(message);
     }
 }

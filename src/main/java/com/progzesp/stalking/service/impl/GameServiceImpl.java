@@ -1,11 +1,13 @@
 package com.progzesp.stalking.service.impl;
 
 import com.progzesp.stalking.domain.GameEto;
+import com.progzesp.stalking.domain.MessageEto;
+import com.progzesp.stalking.domain.MessageInputEto;
 import com.progzesp.stalking.domain.mapper.GameMapper;
-import com.progzesp.stalking.persistance.entity.GameEntity;
-import com.progzesp.stalking.persistance.entity.GameState;
-import com.progzesp.stalking.persistance.entity.UserEntity;
+import com.progzesp.stalking.domain.mapper.MessageMapper;
+import com.progzesp.stalking.persistance.entity.*;
 import com.progzesp.stalking.persistance.repo.GameRepo;
+import com.progzesp.stalking.persistance.repo.MessageRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -24,12 +27,18 @@ public class GameServiceImpl implements GameService {
 
     @Autowired
     private GameMapper gameMapper;
+
+    @Autowired
+    private MessageMapper messageMapper;
     
     @Autowired
     private GameRepo gameRepo;
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private MessageRepo messageRepo;
 
     @Override
     public Pair<Integer, GameEto> save(GameEto newGame, Principal user) {
@@ -125,5 +134,39 @@ public class GameServiceImpl implements GameService {
             return Optional.of(gameMapper.mapToETO(game.get()));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<MessageEto> findMessagesByCriteria(Optional<Long> gameId, Optional<Long> newerThan) {
+        List<MessageEntity> messages = null;
+        if (gameId.isPresent()) {
+            Optional<GameEntity> game = gameRepo.findById(gameId.get());
+            if (game.isPresent()) {
+                messages = game.get().getMessages();
+            }
+            else {
+                return new ArrayList<>();
+            }
+        }
+        if (newerThan.isPresent() && messages != null) {
+            messages = messages.stream().filter(x -> x.getId() > newerThan.get()).collect(Collectors.toList());
+        }
+        return messageMapper.mapToETOList(messages);
+    }
+
+    public MessageEto addMessage(MessageInputEto input) {
+        Optional<GameEntity> gameOptional = gameRepo.findById(input.getGameId());
+        if (gameOptional.isEmpty()) {
+            return null;
+        }
+        else {
+            GameEntity gameEntity = gameOptional.get();
+            MessageEntity messageEntity = new MessageEntity();
+            messageEntity.setContent(input.getContent());
+            //messageEntity.setGame(gameEntity);
+            messageRepo.save(messageEntity);
+            gameEntity.addMessage(messageEntity);
+            return messageMapper.mapToETO(messageEntity);
+        }
     }
 }

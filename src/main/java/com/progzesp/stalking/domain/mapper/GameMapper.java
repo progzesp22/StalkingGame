@@ -39,6 +39,7 @@ public class GameMapper implements Mapper<GameEto, GameEntity> {
         entity.setTaskEntityList(new ArrayList<>());
         entity.setAnswerEntityList(new ArrayList<>());
         entity.setState(to.getState());
+        entity.setMessages(new ArrayList<>());
         return entity;
     }
 }
