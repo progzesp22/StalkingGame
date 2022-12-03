@@ -11,12 +11,11 @@ public class MessageEntity extends AbstractEntity{
 
     private String content;
 
+    private String timestamp;
+
     /*@ManyToOne(fetch = FetchType.LAZY)
     private GameEntity game;*/
 
-    public String getContent() {
-        return content;
-    }
     /*public GameEntity getGame() {
         return game;
     }
@@ -24,7 +23,16 @@ public class MessageEntity extends AbstractEntity{
     public void setGame(GameEntity game) {
         this.game = game;
     }*/
+
+    public String getContent() {
+        return content;
+    }
     public void setContent(String content) {
         this.content = content;
     }
+    public String getTimestamp() { return timestamp; }
+    public void setTimestamp( String timestamp) {
+        this.timestamp = timestamp;
+    }
+
 }

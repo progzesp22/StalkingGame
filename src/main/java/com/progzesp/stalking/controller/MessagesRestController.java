@@ -10,6 +10,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,10 +35,13 @@ public class MessagesRestController {
         }
     }
     @PostMapping()
-    public ResponseEntity<MessageEto> addMessage(@RequestBody MessageInputEto newMessage) {
-        final Pair<Integer, MessageEto > response = gameService.addMessage(newMessage);
+    public ResponseEntity<MessageEto> addMessage(Principal user, @RequestBody MessageInputEto newMessage) {
+        final Pair<Integer, MessageEto > response = gameService.addMessage(newMessage, user);
         if(response.getFirst() == 200){
             return ResponseEntity.ok().body(response.getSecond());
+        }
+        else if (response.getFirst() == 403) {
+            return ResponseEntity.status(403).body(null);
         }
         else{
             return ResponseEntity.status(400).body(null);

@@ -8,11 +8,15 @@ import com.progzesp.stalking.persistance.entity.MessageEntity;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 @Component
-public class MessageMapper implements Mapper<MessageEto, MessageEntity> {
+public class MessageMapper implements Mapper<MessageEto, MessageEntity>{
 
 
     @Override
@@ -20,6 +24,7 @@ public class MessageMapper implements Mapper<MessageEto, MessageEntity> {
         MessageEto messageEto = new MessageEto();
         messageEto.setContent(entity.getContent());
         messageEto.setId(entity.getId());
+        messageEto.setTimestamp(entity.getTimestamp());
         return messageEto;
     }
 
@@ -28,6 +33,9 @@ public class MessageMapper implements Mapper<MessageEto, MessageEntity> {
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.setId(To.getId());
         messageEntity.setContent(To.getContent());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+1:00"));
+        messageEntity.setTimestamp(sdf.format(new Date(System.currentTimeMillis())));
         return messageEntity;
     }
 }

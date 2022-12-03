@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -164,19 +162,24 @@ public class GameServiceImpl implements GameService {
 
     }
 
-    public Pair<Integer, MessageEto > addMessage(MessageInputEto input) {
+    @Override
+    public Pair<Integer, MessageEto > addMessage(MessageInputEto input, Principal user) {
         Optional<GameEntity> gameOptional = gameRepo.findById(input.getGameId());
         if (gameOptional.isEmpty()) {
             return Pair.of(400,new MessageEto());
         }
         else {
             GameEntity gameEntity = gameOptional.get();
-            MessageEntity messageEntity = new MessageEntity();
-            messageEntity.setContent(input.getContent());
-            //messageEntity.setGame(gameEntity);
-            messageRepo.save(messageEntity);
-            gameEntity.addMessage(messageEntity);
-            return Pair.of(200,messageMapper.mapToETO(messageEntity));
+            final Long userId = userRepo.getByUsername(user.getName()).getId();
+            if (userId == gameEntity.getGameMasterId()) {
+                MessageEntity messageEntity = messageMapper.mapToEntity(input);
+                messageRepo.save(messageEntity);
+                gameEntity.addMessage(messageEntity);
+                return Pair.of(200, messageMapper.mapToETO(messageEntity));
+            }
+            else {
+                return Pair.of(403,new MessageEto());
+            }
         }
     }
 }

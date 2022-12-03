@@ -32,5 +32,5 @@ public interface GameService extends Service {
 
     Pair <Integer, List<MessageEto> >findMessagesByCriteria(Optional<Long> gameId, Optional<Long> newerThan);
 
-    Pair<Integer, MessageEto > addMessage(MessageInputEto input);
+    Pair<Integer, MessageEto > addMessage(MessageInputEto input, Principal user);
 }
