@@ -1,8 +1,6 @@
 package com.progzesp.stalking.persistance.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -12,17 +10,6 @@ public class MessageEntity extends AbstractEntity{
     private String content;
 
     private String timestamp;
-
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    private GameEntity game;*/
-
-    /*public GameEntity getGame() {
-        return game;
-    }
-
-    public void setGame(GameEntity game) {
-        this.game = game;
-    }*/
 
     public String getContent() {
         return content;

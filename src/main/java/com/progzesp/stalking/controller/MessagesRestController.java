@@ -5,6 +5,7 @@ import com.progzesp.stalking.domain.MessageInputEto;
 import com.progzesp.stalking.domain.TaskEto;
 import com.progzesp.stalking.persistance.entity.MessageEntity;
 import com.progzesp.stalking.service.GameService;
+import com.progzesp.stalking.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +20,11 @@ import java.util.Optional;
 public class MessagesRestController {
 
     @Autowired
-    private GameService gameService;
+    private MessageService messageService;
 
     @GetMapping()
     public ResponseEntity<List<MessageEto>> getGameMessages(@RequestParam Optional<Long> gameId, @RequestParam Optional<Long> newerThan) {
-        final Pair<Integer, List<MessageEto> > response = gameService.findMessagesByCriteria( gameId, newerThan);
+        final Pair<Integer, List<MessageEto> > response = messageService.findMessagesByCriteria( gameId, newerThan);
         if(response.getFirst() == 200){
             return ResponseEntity.ok().body(response.getSecond());
         }
@@ -36,7 +37,7 @@ public class MessagesRestController {
     }
     @PostMapping()
     public ResponseEntity<MessageEto> addMessage(Principal user, @RequestBody MessageInputEto newMessage) {
-        final Pair<Integer, MessageEto > response = gameService.addMessage(newMessage, user);
+        final Pair<Integer, MessageEto > response = messageService.addMessage(newMessage, user);
         if(response.getFirst() == 200){
             return ResponseEntity.ok().body(response.getSecond());
         }

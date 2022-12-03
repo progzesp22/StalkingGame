@@ -28,16 +28,10 @@ public class GameServiceImpl implements GameService {
     private GameMapper gameMapper;
 
     @Autowired
-    private MessageMapper messageMapper;
-    
-    @Autowired
     private GameRepo gameRepo;
 
     @Autowired
     private UserRepo userRepo;
-
-    @Autowired
-    private MessageRepo messageRepo;
 
     @Override
     public Pair<Integer, GameEto> save(GameEto newGame, Principal user) {
@@ -135,51 +129,5 @@ public class GameServiceImpl implements GameService {
         return Optional.empty();
     }
 
-    @Override
-    public Pair <Integer, List<MessageEto> > findMessagesByCriteria(Optional<Long> gameId, Optional<Long> newerThan) {
-        List<MessageEntity> messages = null;
-        if (gameId.isPresent()) {
-            Optional<GameEntity> game = gameRepo.findById(gameId.get());
-            if (game.isPresent()) {
-                messages = game.get().getMessages();
-                if (messages != null) {
-                    if (newerThan.isPresent()) {
-                        messages = messages.stream().filter(x -> x.getId() > newerThan.get()).collect(Collectors.toList());
-                    }
-                    return Pair.of(200, messageMapper.mapToETOList(messages));
-                }
-                else {
-                    return Pair.of(200, messageMapper.mapToETOList(new ArrayList<>()));
-                }
-            }
-            else {
-                return Pair.of(400, new ArrayList<>());
-            }
-        }
-        else {
-            return Pair.of(400, new ArrayList<>());
-        }
 
-    }
-
-    @Override
-    public Pair<Integer, MessageEto > addMessage(MessageInputEto input, Principal user) {
-        Optional<GameEntity> gameOptional = gameRepo.findById(input.getGameId());
-        if (gameOptional.isEmpty()) {
-            return Pair.of(400,new MessageEto());
-        }
-        else {
-            GameEntity gameEntity = gameOptional.get();
-            final Long userId = userRepo.getByUsername(user.getName()).getId();
-            if (userId == gameEntity.getGameMasterId()) {
-                MessageEntity messageEntity = messageMapper.mapToEntity(input);
-                messageRepo.save(messageEntity);
-                gameEntity.addMessage(messageEntity);
-                return Pair.of(200, messageMapper.mapToETO(messageEntity));
-            }
-            else {
-                return Pair.of(403,new MessageEto());
-            }
-        }
-    }
 }
