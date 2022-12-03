@@ -1,11 +1,16 @@
 package com.progzesp.stalking.service.impl;
 
 import com.progzesp.stalking.domain.GameEto;
+import com.progzesp.stalking.domain.TeamEto;
 import com.progzesp.stalking.domain.mapper.GameMapper;
+import com.progzesp.stalking.domain.mapper.TeamMapper;
 import com.progzesp.stalking.persistance.entity.GameEntity;
 import com.progzesp.stalking.persistance.entity.GameState;
+import com.progzesp.stalking.persistance.entity.TaskEntity;
+import com.progzesp.stalking.persistance.entity.TeamEntity;
 import com.progzesp.stalking.persistance.entity.UserEntity;
 import com.progzesp.stalking.persistance.repo.GameRepo;
+import com.progzesp.stalking.persistance.repo.TeamRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +28,9 @@ public class GameServiceImpl implements GameService {
 
     @Autowired
     private GameMapper gameMapper;
+
+    @Autowired
+    private TeamMapper teamMapper;
 
     @Autowired
     private GameRepo gameRepo;
@@ -54,6 +62,41 @@ public class GameServiceImpl implements GameService {
     @Override
     public List<GameEto> findAllGames() {
         return gameMapper.mapToETOList(this.gameRepo.findAll());
+    }
+
+    @Override
+    public List<TeamEto> findTeamsSortedDesc(Long id){
+        Optional<GameEntity> optGame = this.gameRepo.findById(id);
+        if(optGame.isPresent()){
+            List<TeamEntity> teams = optGame.get().getTeams();
+            // TODO:
+            // teams.sort((x, y) -> x.getTeamScore().compareTo(y.getTeamScore())); // add getTeamScore() to TeamEntity
+            // the problem is: do we want to have "score" field in TeamEntity? 
+            // if we can't have that then we can't use List<TeamEto> as ResponseEntity body
+            // but we need another type of object with additional field of score
+            // also we don't need to calculate team score on each request what may be a very hard task
+            // as we need to connect info from many different repos (!!!)
+            // however we need to keep track of it as the game goes
+            return teamMapper.mapToETOList(teams);
+        }
+        else{
+            return null;
+        }
+    }
+
+    @Override
+    public List<Object> findAvgTasksStats(Long id){
+        Optional<GameEntity> optGame = this.gameRepo.findById(id);
+        if(optGame.isPresent()){
+            List<TaskEntity> tasks = optGame.get().getTaskEntityList();
+            // TODO: add functions to calculate avg stats of answers for each task and return those stats
+            // probably the best idea is to do something like AvgAnswerEntity/ETO and mapper to it 
+            // and return List<> of them instead of List<Object>
+            return null;
+        }
+        else{
+            return null;
+        }
     }
 
     /**
