@@ -1,15 +1,12 @@
 package com.progzesp.stalking.service;
 
 import com.progzesp.stalking.domain.GameEto;
-import com.progzesp.stalking.domain.MessageEto;
-import com.progzesp.stalking.domain.MessageInputEto;
 import com.progzesp.stalking.persistance.entity.GameState;
 
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import com.progzesp.stalking.persistance.entity.MessageEntity;
 import org.springframework.data.util.Pair;
 
 public interface GameService extends Service {
@@ -29,6 +26,4 @@ public interface GameService extends Service {
     boolean deleteGame(Long id);
 
     Optional<GameEto> findGameById(Long id);
-
-
 }

@@ -15,6 +15,7 @@ public class MessageEto extends com.progzesp.stalking.domain.AbstractEto{
     }
 
     public String getTimestamp() { return timestamp; }
+
     public void setTimestamp( String timestamp) {
         this.timestamp = timestamp;
     }

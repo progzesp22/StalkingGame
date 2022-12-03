@@ -28,7 +28,7 @@ public class GameEntity extends AbstractEntity {
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<AnswerEntity> answerEntityList;
 
-    @OneToMany//(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany
     private List<MessageEntity> messages;
 
     @NotNull

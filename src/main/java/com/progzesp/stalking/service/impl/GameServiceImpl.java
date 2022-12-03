@@ -1,24 +1,21 @@
 package com.progzesp.stalking.service.impl;
 
 import com.progzesp.stalking.domain.GameEto;
-import com.progzesp.stalking.domain.MessageEto;
-import com.progzesp.stalking.domain.MessageInputEto;
 import com.progzesp.stalking.domain.mapper.GameMapper;
-import com.progzesp.stalking.domain.mapper.MessageMapper;
-import com.progzesp.stalking.persistance.entity.*;
+import com.progzesp.stalking.persistance.entity.GameEntity;
+import com.progzesp.stalking.persistance.entity.GameState;
+import com.progzesp.stalking.persistance.entity.UserEntity;
 import com.progzesp.stalking.persistance.repo.GameRepo;
-import com.progzesp.stalking.persistance.repo.MessageRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -45,8 +42,8 @@ public class GameServiceImpl implements GameService {
                 return Pair.of(200, gameMapper.mapToETO(this.gameRepo.save(gameEntity)));// ResponseEntity.ok().body(gameService.save(newGame, user));
             }
             else{
-                return Pair.of(400, gameMapper.mapToETO(gameEntity));  
-            }      
+                return Pair.of(400, gameMapper.mapToETO(gameEntity));
+            }
         }
         else{
             gameEntity.setGameMaster(userRepo.findById(userId).get());
@@ -128,6 +125,4 @@ public class GameServiceImpl implements GameService {
         }
         return Optional.empty();
     }
-
-
 }
