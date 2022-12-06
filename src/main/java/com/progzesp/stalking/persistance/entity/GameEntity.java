@@ -9,6 +9,12 @@ import java.util.List;
 @Entity
 @Table(name = "game")
 public class GameEntity extends AbstractEntity {
+
+    @NotNull
+    private String name;
+
+    private String description;
+
     @NotNull
     @ManyToOne
     private UserEntity gameMaster;
@@ -65,6 +71,22 @@ public class GameEntity extends AbstractEntity {
             gameMasterEntity.setId(gameId);
             this.gameMaster = gameMasterEntity;
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public UserEntity getGameMaster() {
