@@ -95,15 +95,15 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public GameState openWaitingRoom(Long id) {
-        return advanceGame(id, GameState.WAITING_FOR_PLAYERS, List.of(GameState.SETTING_UP));
+        return advanceGame(id, GameState.PENDING, List.of(GameState.CREATED));
     }
     @Override
     public GameState startGameplay(Long id) {
-        return advanceGame(id, GameState.ONGOING, List.of(GameState.WAITING_FOR_PLAYERS));
+        return advanceGame(id, GameState.STARTED, List.of(GameState.PENDING));
     }
     @Override
     public GameState endGameplay(Long id) {
-        return advanceGame(id, GameState.ENDED, List.of(GameState.ONGOING));
+        return advanceGame(id, GameState.FINISHED, List.of(GameState.STARTED));
     }
 
     @Override
