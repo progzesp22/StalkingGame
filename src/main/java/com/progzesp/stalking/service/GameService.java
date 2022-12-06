@@ -1,7 +1,6 @@
 package com.progzesp.stalking.service;
 
 import com.progzesp.stalking.domain.GameEto;
-import com.progzesp.stalking.domain.TaskEto;
 import com.progzesp.stalking.persistance.entity.GameState;
 
 import java.security.Principal;

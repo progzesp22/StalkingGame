@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +23,7 @@ public class GameServiceImpl implements GameService {
 
     @Autowired
     private GameMapper gameMapper;
-    
+
     @Autowired
     private GameRepo gameRepo;
 
@@ -43,8 +42,8 @@ public class GameServiceImpl implements GameService {
                 return Pair.of(200, gameMapper.mapToETO(this.gameRepo.save(gameEntity)));// ResponseEntity.ok().body(gameService.save(newGame, user));
             }
             else{
-                return Pair.of(400, gameMapper.mapToETO(gameEntity));  
-            }      
+                return Pair.of(400, gameMapper.mapToETO(gameEntity));
+            }
         }
         else{
             gameEntity.setGameMaster(userRepo.findById(userId).get());
