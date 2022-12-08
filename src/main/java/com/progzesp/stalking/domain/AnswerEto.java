@@ -74,5 +74,4 @@ public abstract class AnswerEto extends AbstractEto {
         return  newBody;
     }
 
-    //TODO USER
 }
