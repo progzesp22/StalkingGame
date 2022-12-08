@@ -3,12 +3,14 @@ package com.progzesp.stalking.persistance.entity.answer;
 import com.progzesp.stalking.domain.answer.NavPosEto;
 import com.progzesp.stalking.persistance.entity.AnswerEntity;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "answer_nav")
+@DiscriminatorValue("NAV")
 public class NavPosEntity extends AnswerEntity {
     @NotNull
     private Double lat;

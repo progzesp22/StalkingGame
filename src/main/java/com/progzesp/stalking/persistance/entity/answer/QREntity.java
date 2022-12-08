@@ -1,11 +1,13 @@
 package com.progzesp.stalking.persistance.entity.answer;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "answer_qr")
+@DiscriminatorValue("QR")
 public class QREntity extends NoNavPosEntity {
     @NotNull
     private String qrCode;

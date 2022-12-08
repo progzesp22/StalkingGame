@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 
 @Entity
 @Table(name = "answer_photo")
+@DiscriminatorValue("PHOTO")
 public class PhotoEntity extends FileEntity {
     @Transient
     private static final byte[] JPEG_HEADER = new byte[] {(byte) 0xFF, (byte) 0xD8, (byte) 0xFF};

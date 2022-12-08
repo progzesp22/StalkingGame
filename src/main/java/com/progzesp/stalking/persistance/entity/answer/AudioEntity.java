@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 
 @Entity
 @Table(name = "answer_audio")
+@DiscriminatorValue("AUDIO")
 public class AudioEntity extends FileEntity {
     @Transient
     private static final byte[][] MPEG_HEADERS = {{(byte) 0x47}, {(byte) 0x00, (byte) 0x00, (byte) 0x01, (byte) 0xBA},

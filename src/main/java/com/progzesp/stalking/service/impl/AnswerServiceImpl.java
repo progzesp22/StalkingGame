@@ -96,7 +96,6 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<AnswerEto> findAnswersByCriteria(Optional<Long> gameId, Optional<String> filter) {
-        //TODO: tu było AnswerEntity, ale teraz jest abstrakcyjne, więc trzeba coś wymyślić
         AnswerEntity toFind = new TextEntity();
         if (gameId.isPresent()) {
             Optional<GameEntity> game = gameRepo.findById(gameId.get());

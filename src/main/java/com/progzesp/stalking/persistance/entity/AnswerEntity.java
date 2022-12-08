@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "answer")
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "DISCRIMINATOR", discriminatorType = DiscriminatorType.STRING)
 public abstract class AnswerEntity extends AbstractEntity {
 
     //TODO: odkomentować @NotNull przy user, przypisywać wartość na podstawie session tokena w POST answer
