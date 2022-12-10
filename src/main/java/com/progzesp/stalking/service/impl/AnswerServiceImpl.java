@@ -1,5 +1,6 @@
 package com.progzesp.stalking.service.impl;
 
+import com.google.gson.JsonObject;
 import com.progzesp.stalking.domain.AnswerEto;
 import com.progzesp.stalking.domain.mapper.AnswerMapper;
 import com.progzesp.stalking.persistance.entity.AnswerEntity;
@@ -55,24 +56,30 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public AnswerEto modifyAnswer(Long id, AnswerEto answerEto) {
+    public AnswerEto modifyAnswer(Long id, JsonObject jsonObject) {
 
         Optional<AnswerEntity> foundEntity = answerRepository.findById(id);
         if (foundEntity.isPresent()) {
             AnswerEntity answerEntity = foundEntity.get();
-            AnswerEntity answerToSave = answerMapper.mapToEntity(answerEto);
-
-            if (!answerEntity.validate())
-                return null;
-            try {
-                copyNonStaticNonNull(answerEntity, answerToSave);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
+            if (jsonObject.has("approved")) {
+                try {
+                    answerEntity.setApproved(Boolean.parseBoolean(String.valueOf(jsonObject.get("approved"))));
+                } catch (Exception ignored) {}
             }
+            if (jsonObject.has("checked")) {
+                try {
+                    answerEntity.setChecked(Boolean.parseBoolean(String.valueOf(jsonObject.get("checked"))));
+                } catch (Exception ignored) {}
+            }
+            if (jsonObject.has("score")) {
+                try {
+                    answerEntity.setScore(Integer.parseInt(String.valueOf(jsonObject.get("score"))));
+                } catch (Exception ignored) {}
+            }
+
             return answerMapper.mapToETO(answerEntity);
         }
-        else
-            return null;
+        return null;
     }
 
     @Override
@@ -96,7 +103,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<AnswerEto> findAnswersByCriteria(Optional<Long> gameId, Optional<String> filter) {
-        AnswerEntity toFind = new TextEntity();
+        AnswerEntity toFind = new TextEntity(); // TODO: to działa tylko dla TextEntity - znaleźć sposób, by działało dla wszystkich
         if (gameId.isPresent()) {
             Optional<GameEntity> game = gameRepo.findById(gameId.get());
             if (game.isPresent()) {

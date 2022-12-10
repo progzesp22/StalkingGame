@@ -26,6 +26,9 @@ public abstract class AnswerEntity extends AbstractEntity {
     @Value("false")
     private boolean checked;
 
+    @Value("0")
+    private int score;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private GameEntity game;
@@ -130,7 +133,13 @@ public abstract class AnswerEntity extends AbstractEntity {
         return checked;
     }
 
-    //TODO: implementacja metod abstrakcyjnych w podklasach
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 
     public abstract boolean validate();
 

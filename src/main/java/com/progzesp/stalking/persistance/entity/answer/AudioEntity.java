@@ -2,7 +2,7 @@ package com.progzesp.stalking.persistance.entity.answer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Entity
 @Table(name = "answer_audio")
@@ -28,12 +28,12 @@ public class AudioEntity extends FileEntity {
 
     @Override
     public String getResponseAsString() {
-        return new String(audio, StandardCharsets.UTF_8);
+        return Base64.getEncoder().encodeToString(audio);
     }
 
     @Override
     public void setResponseFromString(String response) {
-        audio = response.getBytes(StandardCharsets.UTF_8);
+        audio = Base64.getDecoder().decode(response);
     }
 
     @Override

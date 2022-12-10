@@ -3,6 +3,7 @@ package com.progzesp.stalking.persistance.entity.answer;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Entity
 @Table(name = "answer_photo")
@@ -35,12 +36,12 @@ public class PhotoEntity extends FileEntity {
 
     @Override
     public String getResponseAsString() {
-        return new String(photo, StandardCharsets.UTF_8);
+        return Base64.getEncoder().encodeToString(photo);
     }
 
     @Override
     public void setResponseFromString(String response) {
-        photo = response.getBytes(StandardCharsets.UTF_8);
+        photo = Base64.getDecoder().decode(response);
     }
 
     @Override

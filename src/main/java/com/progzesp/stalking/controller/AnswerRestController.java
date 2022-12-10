@@ -1,6 +1,7 @@
 package com.progzesp.stalking.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.progzesp.stalking.domain.AnswerEto;
 import com.progzesp.stalking.domain.AnswerEtoNoResponse;
 import com.progzesp.stalking.domain.answer.NavPosEto;
@@ -14,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -25,6 +25,7 @@ public class AnswerRestController {
     private AnswerService answerService;
     @Autowired
     private TaskService taskService;
+    private final Gson gson = new Gson();
 
     @GetMapping()
     public ResponseEntity<List<AnswerEtoNoResponse>> findSpecificAnswers(@RequestParam Optional<Long> gameId, @RequestParam Optional<String> filter) {
@@ -40,13 +41,15 @@ public class AnswerRestController {
     @PostMapping()
     public AnswerEto addAnswer(HttpEntity<String> httpEntity) {
         AnswerEto newAnswer = getAnswerFromHttpEntity(httpEntity);
+        if (newAnswer == null)
+            return null;
         return answerService.save(newAnswer);
     }
 
     @PatchMapping("/{id}")
     public AnswerEto modifyAnswer(@PathVariable("id") Long id, HttpEntity<String> httpEntity) {
-        AnswerEto answerEto = getAnswerFromHttpEntity(httpEntity);
-        return answerService.modifyAnswer(id, answerEto);
+        JsonObject jsonObject = gson.fromJson(httpEntity.getBody(), JsonObject.class);
+        return answerService.modifyAnswer(id, jsonObject);
     }
 
     /**
@@ -60,16 +63,21 @@ public class AnswerRestController {
     }
 
     public AnswerEto getAnswerFromHttpEntity(HttpEntity<String> httpEntity) {
-        Long id = Long.parseLong(Objects.requireNonNull(httpEntity.getHeaders().getFirst("taskId")));
-        TaskType taskType = taskService.findTask(id).getType();
-        Class<? extends AnswerEto> answerEtoClass;
-        if (taskType == TaskType.LOCALIZATION)
-            answerEtoClass = NavPosEto.class;
-        else
-            answerEtoClass = NoNavPosEto.class;
-        Gson gson = new Gson();
-        AnswerEto answerEto = gson.fromJson(httpEntity.getBody(), answerEtoClass);
-        answerEto.setType(taskType);
-        return answerEto;
+        JsonObject jsonObject = gson.fromJson(httpEntity.getBody(), JsonObject.class);
+        if (jsonObject.has("taskId")) {
+            try {
+                Long taskId = Long.parseLong(String.valueOf(jsonObject.get("taskId")));
+                TaskType taskType = taskService.findTask(taskId).getType();
+                Class<? extends AnswerEto> answerEtoClass;
+                if (taskType == TaskType.LOCALIZATION)
+                    answerEtoClass = NavPosEto.class;
+                else
+                    answerEtoClass = NoNavPosEto.class;
+                AnswerEto answerEto = gson.fromJson(httpEntity.getBody(), answerEtoClass);
+                answerEto.setType(taskType);
+                return answerEto;
+            } catch (Exception ignored) {}
+        }
+        return null;
     }
 }

@@ -25,6 +25,7 @@ public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
         answerEto.setTaskId(entity.getTaskId());
         answerEto.setApproved(entity.isApproved());
         answerEto.setChecked(entity.isChecked());
+        answerEto.setScore(entity.getScore());
         answerEto.setUserId(entity.getUserId());
         answerEto.setGameId(entity.getGameId());
         return answerEto;
@@ -41,7 +42,10 @@ public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
         answerEntity.setId(answerEto.getId());
         answerEntity.setApproved(answerEto.isApproved());
         answerEntity.setChecked(answerEto.isChecked());
+        answerEntity.setScore(answerEto.getScore());
         answerEntity.setTaskId(answerEto.getTaskId());
+        answerEntity.setGameId(answerEto.getGameId());
+        answerEntity.setUserId(answerEto.getUserId());
         return answerEntity;
     }
 

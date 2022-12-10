@@ -1,5 +1,6 @@
 package com.progzesp.stalking.service;
 
+import com.google.gson.JsonObject;
 import com.progzesp.stalking.domain.AnswerEto;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public interface AnswerService extends Service {
 
     AnswerEto save(AnswerEto newTask);
 
-    AnswerEto modifyAnswer(Long id, AnswerEto taskEto);
+    AnswerEto modifyAnswer(Long id, JsonObject jsonObject);
     boolean deleteAnswer(Long id);
 
     AnswerEto findAnswerById(Long id);
