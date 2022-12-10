@@ -78,10 +78,12 @@ public abstract class AnswerEto extends AbstractEto {
         AnswerEtoNoResponse newBody = new AnswerEtoNoResponse();
         newBody.setApproved(this.approved);
         newBody.setChecked(this.checked);
+        newBody.setScore(this.score);
         newBody.setTaskId(this.taskId);
         newBody.setUserId(this.userId);
+        newBody.setGameId(this.gameId);
         newBody.setId(this.getId());
-        return  newBody;
+        return newBody;
     }
 
 }

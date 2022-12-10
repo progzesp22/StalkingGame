@@ -28,6 +28,7 @@ public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
         answerEto.setScore(entity.getScore());
         answerEto.setUserId(entity.getUserId());
         answerEto.setGameId(entity.getGameId());
+        answerEto.setType(fromEntityToType(entity));
         return answerEto;
     }
 
@@ -57,5 +58,19 @@ public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
             case QR_CODE -> new QREntity();
             case TEXT -> new TextEntity();
         };
+    }
+
+    public TaskType fromEntityToType(AnswerEntity answerEntity) {
+        if (answerEntity instanceof AudioEntity) {
+            return TaskType.AUDIO;
+        } else if (answerEntity instanceof NavPosEntity) {
+            return TaskType.LOCALIZATION;
+        } else if (answerEntity instanceof PhotoEntity) {
+            return TaskType.PHOTO;
+        } else if (answerEntity instanceof  QREntity) {
+            return TaskType.QR_CODE;
+        } else {
+            return TaskType.TEXT;
+        }
     }
 }
