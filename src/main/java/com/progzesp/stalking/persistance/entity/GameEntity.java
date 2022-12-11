@@ -1,5 +1,7 @@
 package com.progzesp.stalking.persistance.entity;
 
+import com.progzesp.stalking.persistance.entity.answer.AnswerEntity;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;

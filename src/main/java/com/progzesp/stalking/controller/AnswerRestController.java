@@ -2,10 +2,7 @@ package com.progzesp.stalking.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.progzesp.stalking.domain.AnswerEto;
-import com.progzesp.stalking.domain.AnswerEtoNoResponse;
-import com.progzesp.stalking.domain.answer.NavPosEto;
-import com.progzesp.stalking.domain.answer.NoNavPosEto;
+import com.progzesp.stalking.domain.answer.*;
 import com.progzesp.stalking.persistance.entity.TaskType;
 import com.progzesp.stalking.service.AnswerService;
 import com.progzesp.stalking.service.TaskService;
@@ -47,9 +44,8 @@ public class AnswerRestController {
     }
 
     @PatchMapping("/{id}")
-    public AnswerEto modifyAnswer(@PathVariable("id") Long id, HttpEntity<String> httpEntity) {
-        JsonObject jsonObject = gson.fromJson(httpEntity.getBody(), JsonObject.class);
-        return answerService.modifyAnswer(id, jsonObject);
+    public AnswerEto modifyAnswer(@PathVariable("id") Long id, ModifyAnswerEto eto) {
+        return answerService.modifyAnswer(id, eto);
     }
 
     /**

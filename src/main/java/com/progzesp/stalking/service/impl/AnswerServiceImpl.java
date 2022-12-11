@@ -1,9 +1,9 @@
 package com.progzesp.stalking.service.impl;
 
-import com.google.gson.JsonObject;
-import com.progzesp.stalking.domain.AnswerEto;
+import com.progzesp.stalking.domain.answer.AnswerEto;
+import com.progzesp.stalking.domain.answer.ModifyAnswerEto;
 import com.progzesp.stalking.domain.mapper.AnswerMapper;
-import com.progzesp.stalking.persistance.entity.AnswerEntity;
+import com.progzesp.stalking.persistance.entity.answer.AnswerEntity;
 import com.progzesp.stalking.persistance.entity.GameEntity;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
 import com.progzesp.stalking.persistance.entity.answer.*;
@@ -57,30 +57,22 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public AnswerEto modifyAnswer(Long id, JsonObject jsonObject) {
+    public AnswerEto modifyAnswer(Long id, ModifyAnswerEto eto) {
 
         Optional<AnswerEntity> foundEntity = answerRepository.findById(id);
         if (foundEntity.isPresent()) {
             AnswerEntity answerEntity = foundEntity.get();
-            if (jsonObject.has("approved")) {
-                try {
-                    answerEntity.setApproved(Boolean.parseBoolean(String.valueOf(jsonObject.get("approved"))));
-                } catch (Exception ignored) {}
-            }
-            if (jsonObject.has("checked")) {
-                try {
-                    answerEntity.setChecked(Boolean.parseBoolean(String.valueOf(jsonObject.get("checked"))));
-                } catch (Exception ignored) {}
-            }
-            if (jsonObject.has("score")) {
-                try {
-                    answerEntity.setScore(Integer.parseInt(String.valueOf(jsonObject.get("score"))));
-                } catch (Exception ignored) {}
-            }
+            AnswerEntity answerToSave = answerMapper.mapModifyAnswerEtoToEntity(eto);
 
+            try {
+                copyNonStaticNonNull(answerEntity, answerToSave);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
             return answerMapper.mapToETO(answerEntity);
         }
-        return null;
+        else
+            return null;
     }
 
     @Override

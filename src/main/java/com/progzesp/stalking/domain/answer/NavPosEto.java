@@ -1,7 +1,5 @@
 package com.progzesp.stalking.domain.answer;
 
-import com.progzesp.stalking.domain.AnswerEto;
-
 public class NavPosEto extends AnswerEto {
     private Coords response;
 

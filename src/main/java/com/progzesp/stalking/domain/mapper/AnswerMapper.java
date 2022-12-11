@@ -1,9 +1,10 @@
 package com.progzesp.stalking.domain.mapper;
 
-import com.progzesp.stalking.domain.AnswerEto;
+import com.progzesp.stalking.domain.answer.AnswerEto;
+import com.progzesp.stalking.domain.answer.ModifyAnswerEto;
 import com.progzesp.stalking.domain.answer.NavPosEto;
 import com.progzesp.stalking.domain.answer.NoNavPosEto;
-import com.progzesp.stalking.persistance.entity.AnswerEntity;
+import com.progzesp.stalking.persistance.entity.answer.AnswerEntity;
 import com.progzesp.stalking.persistance.entity.TaskType;
 import com.progzesp.stalking.persistance.entity.answer.*;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,14 @@ public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
         answerEntity.setTaskId(answerEto.getTaskId());
         answerEntity.setGameId(answerEto.getGameId());
         answerEntity.setUserId(answerEto.getUserId());
+        return answerEntity;
+    }
+
+    public final AnswerEntity mapModifyAnswerEtoToEntity(ModifyAnswerEto answerEto) {
+        AnswerEntity answerEntity = new TextEntity();
+        answerEntity.setApproved(answerEto.isApproved());
+        answerEntity.setChecked(answerEto.isChecked());
+        answerEntity.setScore(answerEto.getScore());
         return answerEntity;
     }
 

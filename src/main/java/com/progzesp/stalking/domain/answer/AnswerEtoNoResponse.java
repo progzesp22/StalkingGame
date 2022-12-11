@@ -1,8 +1,8 @@
-package com.progzesp.stalking.domain;
+package com.progzesp.stalking.domain.answer;
 
-import com.progzesp.stalking.persistance.entity.TaskType;
+import com.progzesp.stalking.domain.AbstractEto;
 
-public abstract class AnswerEto extends AbstractEto {
+public class AnswerEtoNoResponse extends AbstractEto {
 
     private Long userId;
 
@@ -15,16 +15,6 @@ public abstract class AnswerEto extends AbstractEto {
     private Long taskId;
 
     private Long gameId;
-
-    private TaskType type;
-
-    public Long getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(Long gameId) {
-        this.gameId = gameId;
-    }
 
     public Long getUserId() {
         return userId;
@@ -66,24 +56,11 @@ public abstract class AnswerEto extends AbstractEto {
         this.score = score;
     }
 
-    public TaskType getType() {
-        return type;
+    public Long getGameId() {
+        return gameId;
     }
 
-    public void setType(TaskType type) {
-        this.type = type;
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
     }
-
-    public AnswerEtoNoResponse makeBodyWithoutResponse() {
-        AnswerEtoNoResponse newBody = new AnswerEtoNoResponse();
-        newBody.setApproved(this.approved);
-        newBody.setChecked(this.checked);
-        newBody.setScore(this.score);
-        newBody.setTaskId(this.taskId);
-        newBody.setUserId(this.userId);
-        newBody.setGameId(this.gameId);
-        newBody.setId(this.getId());
-        return newBody;
-    }
-
 }

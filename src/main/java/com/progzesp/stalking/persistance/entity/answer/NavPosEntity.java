@@ -1,7 +1,6 @@
 package com.progzesp.stalking.persistance.entity.answer;
 
 import com.progzesp.stalking.domain.answer.NavPosEto;
-import com.progzesp.stalking.persistance.entity.AnswerEntity;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
