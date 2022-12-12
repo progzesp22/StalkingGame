@@ -8,6 +8,7 @@ import com.progzesp.stalking.persistance.entity.TaskEntity;
 import com.progzesp.stalking.persistance.repo.AnswerRepo;
 import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.TaskRepo;
+import com.progzesp.stalking.persistance.repo.TeamRepo;
 import com.progzesp.stalking.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -33,6 +34,8 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Autowired
     private GameRepo gameRepo;
+
+    @Autowired TeamRepo teamRepository;
 
     @Override
     public AnswerEto save(AnswerEto newAnswer) {
@@ -62,6 +65,8 @@ public class AnswerServiceImpl implements AnswerService {
 
             try {
                 copyNonStaticNonNull(answerEntity, answerToSave);
+                int gotScore = answerEntity.isApproved() ? answerEntity.getTask().getPoints() : 0;
+                answerEntity.getUser().getTeam().updateScore(gotScore);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
