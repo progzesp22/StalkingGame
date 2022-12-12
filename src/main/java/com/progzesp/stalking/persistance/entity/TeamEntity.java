@@ -18,6 +18,9 @@ public class TeamEntity extends AbstractEntity{
     @ManyToOne
     private GameEntity game;
 
+    @NotNull
+    private int score;
+
     @Transient
     public Long getGameId() {
 
@@ -60,5 +63,17 @@ public class TeamEntity extends AbstractEntity{
 
     public void setMembers(List<UserEntity> members) {
         this.members = members;
+    }
+
+    public void setScore(int newScore){
+        this.score = newScore;
+    }
+
+    public void updateScore(int newScore){
+        this.score += newScore;
+    }
+
+    public int getScore(){
+        return this.score;
     }
 }

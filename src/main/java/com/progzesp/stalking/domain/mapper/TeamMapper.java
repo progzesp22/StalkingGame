@@ -16,6 +16,7 @@ public class TeamMapper implements Mapper<TeamEto, TeamEntity> {
         eto.setId(entity.getId());
         eto.setName(entity.getName());
         eto.setMembers(entity.getMembers().stream().map(AbstractEntity::getId).collect(Collectors.toList()));
+        eto.setScore(entity.getScore());
         return eto;
     }
 
@@ -25,6 +26,7 @@ public class TeamMapper implements Mapper<TeamEto, TeamEntity> {
         entity.setId(To.getId());
         entity.setName(To.getName());
         entity.setMembers(new ArrayList<>());
+        entity.setScore(To.getScore());
         return entity;
     }
 }

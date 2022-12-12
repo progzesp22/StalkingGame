@@ -8,6 +8,8 @@ public class TeamEto extends AbstractEto{
 
     private List<Long> members;
 
+    private int score;
+
     public String getName() {
         return name;
     }
@@ -22,5 +24,13 @@ public class TeamEto extends AbstractEto{
 
     public void setMembers(List<Long> members) {
         this.members = members;
+    }
+
+    public void setScore(int newScore){
+        this.score = newScore;
+    }
+
+    public int getScore(){
+        return this.score;
     }
 }

@@ -12,6 +12,7 @@ import com.progzesp.stalking.persistance.repo.AnswerRepo;
 import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.TaskRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
+import com.progzesp.stalking.persistance.repo.TeamRepo;
 import com.progzesp.stalking.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -42,6 +43,8 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired TeamRepo teamRepository;
 
     @Override
     public Pair<Integer, AnswerEto> save(AnswerEto newAnswer, Principal user) {
@@ -105,12 +108,9 @@ public class AnswerServiceImpl implements AnswerService {
         Optional<AnswerEntity> foundEntity = answerRepository.findById(id);
         if (foundEntity.isPresent()) {
             AnswerEntity answerEntity = foundEntity.get();
-
-
             if(!Objects.equals(answerEntity.getGame().getGameMasterId(), userRepo.getByUsername(user.getName()).getId())) {
                 return Pair.of(403, new ModifyAnswerEto());
             }
-
             answerEntity.setChecked(answerEto.isChecked());
             answerEntity.setApproved(answerEto.isApproved());
             answerEntity.setScore(answerEto.getScore());

@@ -69,14 +69,7 @@ public class GameServiceImpl implements GameService {
         Optional<GameEntity> optGame = this.gameRepo.findById(id);
         if(optGame.isPresent()){
             List<TeamEntity> teams = optGame.get().getTeams();
-            // TODO:
-            // teams.sort((x, y) -> x.getTeamScore().compareTo(y.getTeamScore())); // add getTeamScore() to TeamEntity
-            // the problem is: do we want to have "score" field in TeamEntity? 
-            // if we can't have that then we can't use List<TeamEto> as ResponseEntity body
-            // but we need another type of object with additional field of score
-            // also we don't need to calculate team score on each request what may be a very hard task
-            // as we need to connect info from many different repos (!!!)
-            // however we need to keep track of it as the game goes
+            teams.sort((x, y) -> Integer.compare(x.getScore(), y.getScore()));
             return teamMapper.mapToETOList(teams);
         }
         else{
@@ -91,7 +84,7 @@ public class GameServiceImpl implements GameService {
             List<TaskEntity> tasks = optGame.get().getTaskEntityList();
             // TODO: add functions to calculate avg stats of answers for each task and return those stats
             // probably the best idea is to do something like AvgAnswerEntity/ETO and mapper to it 
-            // and return List<> of them instead of List<Object>
+            // and return List<> of them instead of generic List<Object>
             return null;
         }
         else{
