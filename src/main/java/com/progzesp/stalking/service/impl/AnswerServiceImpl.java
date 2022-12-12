@@ -1,10 +1,12 @@
 package com.progzesp.stalking.service.impl;
 
-import com.progzesp.stalking.domain.AnswerEto;
+import com.progzesp.stalking.domain.answer.AnswerEto;
+import com.progzesp.stalking.domain.answer.ModifyAnswerEto;
 import com.progzesp.stalking.domain.mapper.AnswerMapper;
-import com.progzesp.stalking.persistance.entity.AnswerEntity;
+import com.progzesp.stalking.persistance.entity.answer.AnswerEntity;
 import com.progzesp.stalking.persistance.entity.GameEntity;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
+import com.progzesp.stalking.persistance.entity.answer.*;
 import com.progzesp.stalking.persistance.repo.AnswerRepo;
 import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.TaskRepo;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +41,8 @@ public class AnswerServiceImpl implements AnswerService {
     public AnswerEto save(AnswerEto newAnswer) {
 
         AnswerEntity answerEntity = answerMapper.mapToEntity(newAnswer);
-
+        if (!answerEntity.validate())
+            return null;
 
         Optional<TaskEntity> optionalTask = taskRepository.findById(newAnswer.getTaskId());
         TaskEntity taskEntity = optionalTask.orElse(null);
@@ -53,12 +57,12 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public AnswerEto modifyAnswer(Long id, AnswerEto answerEto) {
+    public AnswerEto modifyAnswer(Long id, ModifyAnswerEto eto) {
 
         Optional<AnswerEntity> foundEntity = answerRepository.findById(id);
         if (foundEntity.isPresent()) {
             AnswerEntity answerEntity = foundEntity.get();
-            AnswerEntity answerToSave = answerMapper.mapToEntity(answerEto);
+            AnswerEntity answerToSave = answerMapper.mapModifyAnswerEtoToEntity(eto);
 
             try {
                 copyNonStaticNonNull(answerEntity, answerToSave);
@@ -92,25 +96,30 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<AnswerEto> findAnswersByCriteria(Optional<Long> gameId, Optional<String> filter) {
-        AnswerEntity toFind = new AnswerEntity();
-        if (gameId.isPresent()) {
-            Optional<GameEntity> game = gameRepo.findById(gameId.get());
-            if (game.isPresent()) {
-                toFind.setGame(game.get());
+        List<AnswerEntity> result = new LinkedList<>();
+        AnswerEntity[] entities = new AnswerEntity[] {new TextEntity(), new QREntity(),
+                new PhotoEntity(), new AudioEntity(), new NavPosEntity()};
+        for (AnswerEntity toFind : entities) {
+            if (gameId.isPresent()) {
+                Optional<GameEntity> game = gameRepo.findById(gameId.get());
+                if (game.isPresent()) {
+                    toFind.setGame(game.get());
+                }
+                else {
+                    return new ArrayList<>();
+                }
             }
-            else {
-                return new ArrayList<>();
+            if (filter.isPresent()) {
+                if (filter.get().equals("checked")) {
+                    toFind.setChecked(true);
+                }
+                else if (filter.get().equals("unchecked")) {
+                    toFind.setChecked(false);
+                }
             }
+            result.addAll(answerRepository.findAll(Example.of(toFind)));
         }
-        if (filter.isPresent()) {
-            if (filter.get().equals("checked")) {
-                toFind.setChecked(true);
-            }
-            else if (filter.get().equals("unchecked")) {
-                toFind.setChecked(false);
-            }
-        }
-        List<AnswerEntity> result = answerRepository.findAll(Example.of(toFind));
+
         return answerMapper.mapToETOList(result);
     }
 }
