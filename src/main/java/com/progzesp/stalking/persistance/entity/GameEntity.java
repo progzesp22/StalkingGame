@@ -10,6 +10,12 @@ import java.util.List;
 @Entity
 @Table(name = "game")
 public class GameEntity extends AbstractEntity {
+
+    @NotNull
+    private String name;
+
+    private String description;
+
     @NotNull
     @ManyToOne
     private UserEntity gameMaster;
@@ -28,6 +34,9 @@ public class GameEntity extends AbstractEntity {
 
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<AnswerEntity> answerEntityList;
+
+    @OneToMany
+    private List<MessageEntity> messages;
 
     @NotNull
     private Date startDate;
@@ -63,6 +72,22 @@ public class GameEntity extends AbstractEntity {
             gameMasterEntity.setId(gameId);
             this.gameMaster = gameMasterEntity;
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public UserEntity getGameMaster() {
@@ -118,5 +143,16 @@ public class GameEntity extends AbstractEntity {
     }
     public GameState getState() {
         return state;
+    }
+
+    public List<MessageEntity> getMessages() {
+        return messages;
+    }
+    public void setMessages(List<MessageEntity> messages) {
+        this.messages = messages;
+    }
+
+    public void addMessage(MessageEntity message) {
+        messages.add(message);
     }
 }

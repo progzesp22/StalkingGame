@@ -9,6 +9,10 @@ import java.util.List;
 
 public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
+    private String name;
+
+    private String description;
+
     private List<Long> taskEntityList;
 
     private Long gameMasterId;
@@ -25,6 +29,22 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
     @Enumerated(EnumType.STRING)
     private GameState state;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public List<Long> getAnswers() {
         return answers;
@@ -91,12 +111,12 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
     }
 
     public GameEto() {
-        this.setState(GameState.SETTING_UP);
+        this.setState(GameState.CREATED);
     }
 
     public GameEto(Long gameMasterId) {
         this.setGameMasterId(gameMasterId);
         this.setStartDate(new Date());
-        this.setState(GameState.SETTING_UP);
+        this.setState(GameState.CREATED);
     }
 }

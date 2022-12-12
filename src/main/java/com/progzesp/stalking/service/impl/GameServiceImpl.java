@@ -9,10 +9,11 @@ import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +23,33 @@ public class GameServiceImpl implements GameService {
 
     @Autowired
     private GameMapper gameMapper;
+
     @Autowired
-    private GameRepo gameRepository;
+    private GameRepo gameRepo;
 
     @Autowired
     private UserRepo userRepo;
+
+    @Override
+    public Pair<Integer, GameEto> save(GameEto newGame, Principal user) {
+        final Long userId = userRepo.getByUsername(user.getName()).getId();
+        final Long gameMasterId = newGame.getGameMasterId();
+        GameEntity gameEntity = gameMapper.mapToEntity(newGame);
+
+        if(gameMasterId != null){
+            if(userId == gameMasterId){
+                gameEntity.setGameMaster(userRepo.findById(gameMasterId).get());
+                return Pair.of(200, gameMapper.mapToETO(this.gameRepo.save(gameEntity)));// ResponseEntity.ok().body(gameService.save(newGame, user));
+            }
+            else{
+                return Pair.of(400, gameMapper.mapToETO(gameEntity));
+            }
+        }
+        else{
+            gameEntity.setGameMaster(userRepo.findById(userId).get());
+            return Pair.of(200, gameMapper.mapToETO(this.gameRepo.save(gameEntity)));
+        }
+    }
 
     @Override
     public GameEto save(GameEto newGame) {
@@ -38,13 +61,13 @@ public class GameServiceImpl implements GameService {
         UserEntity gm = optionalGM.orElse(null);
 
         gameEntity.setGameMaster(gm);
-        gameEntity = this.gameRepository.save(gameEntity);
+        gameEntity = this.gameRepo.save(gameEntity);
         return gameMapper.mapToETO(gameEntity);
     }
 
     @Override
     public List<GameEto> findAllGames() {
-        return gameMapper.mapToETOList(this.gameRepository.findAll());
+        return gameMapper.mapToETOList(this.gameRepo.findAll());
     }
 
     /**
@@ -55,7 +78,7 @@ public class GameServiceImpl implements GameService {
      * @return the new state
      */
     public GameState advanceGame(Long id, GameState newState, List<GameState> requiredOldStates) {
-        Optional<GameEntity> gameOptional = gameRepository.findById(id);
+        Optional<GameEntity> gameOptional = gameRepo.findById(id);
         if (gameOptional.isEmpty()) {
             return null;
         }
@@ -63,7 +86,7 @@ public class GameServiceImpl implements GameService {
             GameEntity gameEntity = gameOptional.get();
             if (requiredOldStates.contains(gameEntity.getState()) ) {
                 gameEntity.setState(newState);
-                gameRepository.save(gameEntity);
+                gameRepo.save(gameEntity);
             }
             return gameEntity.getState();
         }
@@ -71,26 +94,35 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public GameState openWaitingRoom(Long id) {
-        return advanceGame(id, GameState.WAITING_FOR_PLAYERS, List.of(GameState.SETTING_UP));
+        return advanceGame(id, GameState.PENDING, List.of(GameState.CREATED));
     }
     @Override
     public GameState startGameplay(Long id) {
-        return advanceGame(id, GameState.ONGOING, List.of(GameState.WAITING_FOR_PLAYERS));
+        return advanceGame(id, GameState.STARTED, List.of(GameState.PENDING));
     }
     @Override
     public GameState endGameplay(Long id) {
-        return advanceGame(id, GameState.ENDED, List.of(GameState.ONGOING));
+        return advanceGame(id, GameState.FINISHED, List.of(GameState.STARTED));
     }
 
     @Override
     public boolean deleteGame(Long id) {
-        Optional<GameEntity> gameOptional = gameRepository.findById(id);
+        Optional<GameEntity> gameOptional = gameRepo.findById(id);
         if (gameOptional.isEmpty()) {
             return false;
         }
         else {
-            gameRepository.delete(gameOptional.get());
-            return gameRepository.findById(id).isEmpty();
+            gameRepo.delete(gameOptional.get());
+            return gameRepo.findById(id).isEmpty();
         }
+    }
+
+    @Override
+    public Optional<GameEto> findGameById(Long id){
+        Optional<GameEntity> game = gameRepo.findById(id);
+        if(game.isPresent()){
+            return Optional.of(gameMapper.mapToETO(game.get()));
+        }
+        return Optional.empty();
     }
 }
