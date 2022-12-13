@@ -12,7 +12,6 @@ public class UserMapper implements Mapper<UserEto, UserEntity> {
         eto.setId(entity.getId());
         eto.setUsername(entity.getUsername());
         eto.setPassword(entity.getPassword());
-        eto.setTeamId(entity.getTeamId());
         return eto;
     }
 

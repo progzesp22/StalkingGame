@@ -16,6 +16,8 @@ public class TeamMapper implements Mapper<TeamEto, TeamEntity> {
         eto.setId(entity.getId());
         eto.setName(entity.getName());
         eto.setMembers(entity.getMembers().stream().map(AbstractEntity::getId).collect(Collectors.toList()));
+        eto.setCreator(entity.getCreator().getId());
+        eto.setGameId(entity.getGameId());
         return eto;
     }
 

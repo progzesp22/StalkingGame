@@ -1,9 +1,8 @@
 package com.progzesp.stalking.persistance.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 public class UserEntity extends AbstractEntity {
@@ -14,35 +13,16 @@ public class UserEntity extends AbstractEntity {
     @NotNull
     private String password;
 
-    @ManyToOne
-    private TeamEntity team;
+    @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
+    private List<TeamEntity> teams;
 
     @Transient
-    public Long getTeamId() {
-
-        if (this.team == null) {
-            return null;
-        }
-        return this.team.getId();
+    public List<TeamEntity> getTeams() {
+        return this.teams;
     }
 
-    public void setTeamId(Long teamId) {
-
-        if (teamId == null) {
-            this.team = null;
-        } else {
-            TeamEntity teamEntity = new TeamEntity();
-            teamEntity.setId(teamId);
-            this.team = teamEntity;
-        }
-    }
-
-    public TeamEntity getTeam() {
-        return team;
-    }
-
-    public void setTeam(TeamEntity team) {
-        this.team = team;
+    public void setTeams(List<TeamEntity> teams) {
+        this.teams = teams;
     }
 
     public String getUsername() {

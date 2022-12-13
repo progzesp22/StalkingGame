@@ -6,16 +6,6 @@ public class UserEto extends AbstractEto {
 
     private String password;
 
-    private Long teamId;
-
-    public Long getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(Long teamId) {
-        this.teamId = teamId;
-    }
-
     public String getUsername() {
         return username;
     }
