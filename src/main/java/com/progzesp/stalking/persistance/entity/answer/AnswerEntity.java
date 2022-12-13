@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Entity
 @Table(name = "answer")
@@ -36,6 +37,25 @@ public abstract class AnswerEntity extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private GameEntity game;
+
+    @NotNull
+    private Date submitTime;
+
+    public void setSubmitTime(Date submitTime) {
+        this.submitTime = submitTime;
+    }
+
+    public Date getSubmitTime() {
+        return submitTime;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
 
     public GameEntity getGame() {
         return game;
@@ -135,14 +155,6 @@ public abstract class AnswerEntity extends AbstractEntity {
 
     public Boolean isChecked() {
         return checked;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
     }
 
     public abstract boolean validate();

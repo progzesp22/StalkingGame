@@ -19,6 +19,14 @@ public abstract class AnswerEto extends AbstractEto {
 
     private TaskType type;
 
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
     public Long getGameId() {
         return gameId;
     }
@@ -57,14 +65,6 @@ public abstract class AnswerEto extends AbstractEto {
 
     public void setChecked(Boolean checked) {
         this.checked = checked;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
     }
 
     public TaskType getType() {
