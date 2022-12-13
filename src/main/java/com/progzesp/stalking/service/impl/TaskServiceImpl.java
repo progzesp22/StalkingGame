@@ -9,6 +9,7 @@ import com.progzesp.stalking.persistance.repo.TaskRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.util.Pair;
 
 import java.security.Principal;
@@ -47,6 +48,20 @@ public class TaskServiceImpl implements TaskService {
             final Long gameMasterId = game.get().getGameMasterId();
 
             taskEntity.setGame(game.get());
+
+            List<TaskEntity> prerequisiteTasks = new ArrayList<>();
+
+            for(Long taskId : newTask.getPrerequisiteTasks()) {
+                Optional<TaskEntity> optionalPrerequisiteTask = taskRepo.findById(taskId);
+                if(optionalPrerequisiteTask.isPresent()) {
+                    TaskEntity prerequisiteTask = optionalPrerequisiteTask.get();
+                    if(prerequisiteTask.getGameId() == taskEntity.getGameId()) {
+                        prerequisiteTasks.add(prerequisiteTask);
+                    }
+                }
+            }
+
+            taskEntity.setPrerequisiteTasks(prerequisiteTasks);
 
             if(gameMasterId == userId){
                 return Pair.of(200, taskMapper.mapToETO(taskRepo.save(taskEntity)));// ResponseEntity.ok().body(taskService.save(newTask, user));
@@ -94,7 +109,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskEto findTask(Long id) {
-        Optional<TaskEntity> foundEntity = taskRepository.findById(id);
+        Optional<TaskEntity> foundEntity = taskRepo.findById(id);
         if (foundEntity.isPresent()) {
             TaskEntity taskEntity = foundEntity.get();
             return taskMapper.mapToETO(taskEntity);
@@ -105,16 +120,13 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskEto> findTasksByCriteria(Optional<Long> gameId) {
         TaskEntity toFind = new TaskEntity();
+        List<TaskEntity> result;
         if (gameId.isPresent()) {
-            Optional<GameEntity> game = gameRepo.findById(gameId.get());
-            if (game.isPresent()) {
-                toFind.setGame(game.get());
-            }
-            else {
-                return new ArrayList<>();
-            }
+            result = this.taskRepo.findByGame_Id(gameId.get());
         }
-        List<TaskEntity> result = taskRepo.findAll(Example.of(toFind));
+        else {
+            result = this.taskRepo.findAll();
+        }
         return taskMapper.mapToETOList(result);
     }
 }

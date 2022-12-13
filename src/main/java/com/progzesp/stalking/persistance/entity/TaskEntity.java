@@ -24,7 +24,7 @@ public class TaskEntity extends AbstractEntity {
     @NotNull
     private int points;
 
-    @OneToMany()
+    @ManyToMany()
     private List<TaskEntity> prerequisiteTasks;
 
     public int getPoints() {
