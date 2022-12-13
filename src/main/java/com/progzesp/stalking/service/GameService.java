@@ -2,6 +2,7 @@ package com.progzesp.stalking.service;
 
 import com.progzesp.stalking.domain.GameEto;
 import com.progzesp.stalking.domain.TaskEto;
+import com.progzesp.stalking.domain.TaskStatEto;
 import com.progzesp.stalking.domain.TeamEto;
 import com.progzesp.stalking.persistance.entity.GameState;
 import org.springframework.data.util.Pair;
@@ -20,7 +21,7 @@ public interface GameService extends Service {
 
     List<TeamEto> findTeamsSortedDesc(Long id);
 
-    List<Object> findAvgTasksStats(Long id);
+    List<TaskStatEto> findAvgTasksStats(Long id);
 
     GameState openWaitingRoom(Long id);
 

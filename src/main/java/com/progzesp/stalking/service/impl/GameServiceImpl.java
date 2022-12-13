@@ -1,19 +1,24 @@
 package com.progzesp.stalking.service.impl;
 
 import com.progzesp.stalking.domain.GameEto;
+import com.progzesp.stalking.domain.TaskStatEto;
 import com.progzesp.stalking.domain.TeamEto;
 import com.progzesp.stalking.domain.mapper.GameMapper;
+import com.progzesp.stalking.domain.mapper.TaskStatMapper;
 import com.progzesp.stalking.domain.mapper.TeamMapper;
-import com.progzesp.stalking.persistance.entity.GameEntity;
-import com.progzesp.stalking.persistance.entity.GameState;
-import com.progzesp.stalking.persistance.entity.TaskEntity;
-import com.progzesp.stalking.persistance.entity.TeamEntity;
-import com.progzesp.stalking.persistance.entity.UserEntity;
+import com.progzesp.stalking.persistance.entity.*;
+import com.progzesp.stalking.persistance.entity.answer.AnswerEntity;
+import com.progzesp.stalking.persistance.entity.answer.AudioEntity;
+import com.progzesp.stalking.persistance.entity.answer.NavPosEntity;
+import com.progzesp.stalking.persistance.entity.answer.PhotoEntity;
+import com.progzesp.stalking.persistance.entity.answer.QREntity;
+import com.progzesp.stalking.persistance.entity.answer.TextEntity;
+import com.progzesp.stalking.persistance.repo.AnswerRepo;
 import com.progzesp.stalking.persistance.repo.GameRepo;
-import com.progzesp.stalking.persistance.repo.TeamRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -33,10 +39,17 @@ public class GameServiceImpl implements GameService {
     private TeamMapper teamMapper;
 
     @Autowired
+    private TaskStatMapper taskStatMapper;
+
+    @Autowired
     private GameRepo gameRepo;
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private AnswerRepo answerRepo;
+
 
     @Override
     public Pair<Integer, GameEto> save(GameEto newGame, Principal user) {
@@ -65,29 +78,75 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public List<TeamEto> findTeamsSortedDesc(Long id){
+    public List<TeamEto> findTeamsSortedDesc(Long id) {
         Optional<GameEntity> optGame = this.gameRepo.findById(id);
-        if(optGame.isPresent()){
+        if (optGame.isPresent()) {
             List<TeamEntity> teams = optGame.get().getTeams();
             teams.sort((x, y) -> Integer.compare(x.getScore(), y.getScore()));
             return teamMapper.mapToETOList(teams);
-        }
-        else{
+        } else {
             return null;
         }
     }
 
     @Override
-    public List<Object> findAvgTasksStats(Long id){
+    public List<TaskStatEto> findAvgTasksStats(Long id) {
         Optional<GameEntity> optGame = this.gameRepo.findById(id);
-        if(optGame.isPresent()){
+        if (optGame.isPresent()) {
             List<TaskEntity> tasks = optGame.get().getTaskEntityList();
+            List<TaskStatEntity> tasksStats = new ArrayList<>();
+            for (TaskEntity task : tasks) {
+                TaskStatEntity taskStat = new TaskStatEntity();
+                taskStat.setName(task.getName());
+                taskStat.setMaxScore(task.getPoints());
+                
+                TaskType taskType = task.getTaskType();
+                AnswerEntity exampleAnswer;
+
+                switch(taskType){
+                    case PHOTO:
+                        exampleAnswer = new PhotoEntity();
+                        break;
+                    case LOCALIZATION:
+                        exampleAnswer = new NavPosEntity();
+                        break;
+                    case QR_CODE:
+                        exampleAnswer = new QREntity();
+                        break;
+                    case TEXT:
+                        exampleAnswer = new TextEntity();
+                        break;
+                    case AUDIO:
+                        exampleAnswer = new AudioEntity();
+                        break;
+                    default:
+                        return null;
+                }
+                
+                exampleAnswer.setTask(task);
+                List<AnswerEntity> exampleAnswers = answerRepo.findAll(Example.of(exampleAnswer));
+                List<TeamEntity> uniqueTeams = exampleAnswers.stream().map(AnswerEntity::getUser).map(UserEntity::getTeam).distinct().toList();
+                taskStat.setTeamsAttempted(uniqueTeams.size());
+
+                exampleAnswer.setApproved(true);
+                exampleAnswers = answerRepo.findAll(Example.of(exampleAnswer));
+                uniqueTeams = exampleAnswers.stream().map(AnswerEntity::getUser).map(UserEntity::getTeam).distinct().toList();
+                taskStat.setTeamsAttempted(uniqueTeams.size());
+
+                double scoreSum = exampleAnswers.stream().map(AnswerEntity::getScore).reduce(0, (a, b) -> a + b);
+                taskStat.setAverageScore(scoreSum / exampleAnswers.size());
+
+                long gameStart = optGame.get().getStartTime().getTime();
+                double timeSum = exampleAnswers.stream().map(x -> x.getSubmitTime().getTime() - gameStart).mapToInt(Long::intValue).sum();
+                taskStat.setAverageSolvingTime(timeSum/exampleAnswers.size());
+
+                tasksStats.add(taskStat);
+            }
             // TODO: add functions to calculate avg stats of answers for each task and return those stats
             // probably the best idea is to do something like AvgAnswerEntity/ETO and mapper to it 
             // and return List<> of them instead of generic List<Object>
-            return null;
-        }
-        else{
+            return taskStatMapper.mapToETOList(tasksStats);
+        } else {
             return null;
         }
     }
