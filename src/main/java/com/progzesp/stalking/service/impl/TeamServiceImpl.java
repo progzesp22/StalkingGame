@@ -91,6 +91,15 @@ public class TeamServiceImpl implements TeamService {
         Optional<TeamEntity> foundEntity = teamRepo.findById(id);
         if (foundEntity.isPresent()) {
             TeamEntity teamEntity = foundEntity.get();
+            if (!teamEntity.getCreator().getUsername().equals(user.getName()) &&
+                    !user.getName().equals(teamEntity.getGame().getGameMaster().getUsername())) {
+                return Pair.of(403, new TeamEto());
+            }
+            if (teamEto.getMembers() != null) {
+                if (!teamEto.getMembers().contains(teamEntity.getCreator().getUsername())) {
+                    return Pair.of(400, new TeamEto());
+                }
+            }
             TeamEntity teamToSave = teamMapper.mapToEntity(teamEto);
             try {
                 copyNonStaticNonNull(teamEntity, teamToSave);
@@ -98,9 +107,9 @@ public class TeamServiceImpl implements TeamService {
                 e.printStackTrace();
             }
             teamRepo.save(teamEntity);
-            return Pair.of(200,teamMapper.mapToETO(teamEntity));
+            return Pair.of(200, teamMapper.mapToETO(teamEntity));
         } else {
-            return Pair.of(400,new TeamEto());
+            return Pair.of(400, new TeamEto());
         }
     }
 

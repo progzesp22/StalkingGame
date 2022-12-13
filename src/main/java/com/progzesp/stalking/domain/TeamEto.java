@@ -6,17 +6,17 @@ public class TeamEto extends AbstractEto {
 
     private String name;
 
-    private List<Long> members;
+    private List<String> members;
 
     private Long gameId;
 
-    private Long creator;
+    private String creator;
 
-    public Long getCreator() {
+    public String getCreator() {
         return creator;
     }
 
-    public void setCreator(Long creator) {
+    public void setCreator(String creator) {
         this.creator = creator;
     }
 
@@ -36,11 +36,11 @@ public class TeamEto extends AbstractEto {
         this.name = name;
     }
 
-    public List<Long> getMembers() {
+    public List<String> getMembers() {
         return members;
     }
 
-    public void setMembers(List<Long> members) {
+    public void setMembers(List<String> members) {
         this.members = members;
     }
 }
