@@ -108,6 +108,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public TaskEto findTask(Long id) {
+        Optional<TaskEntity> foundEntity = taskRepo.findById(id);
+        if (foundEntity.isPresent()) {
+            TaskEntity taskEntity = foundEntity.get();
+            return taskMapper.mapToETO(taskEntity);
+        }
+        return null;
+    }
+
+    @Override
     public List<TaskEto> findTasksByCriteria(Optional<Long> gameId) {
         TaskEntity toFind = new TaskEntity();
         if (gameId.isPresent()) {

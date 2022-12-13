@@ -1,10 +1,13 @@
 package com.progzesp.stalking.service.impl;
 
-import com.progzesp.stalking.domain.AnswerEto;
+import com.progzesp.stalking.domain.answer.AnswerEto;
+import com.progzesp.stalking.domain.answer.ModifyAnswerEto;
+import com.progzesp.stalking.domain.answer.NoNavPosEto;
 import com.progzesp.stalking.domain.mapper.AnswerMapper;
-import com.progzesp.stalking.persistance.entity.AnswerEntity;
+import com.progzesp.stalking.persistance.entity.answer.AnswerEntity;
 import com.progzesp.stalking.persistance.entity.GameEntity;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
+import com.progzesp.stalking.persistance.entity.answer.*;
 import com.progzesp.stalking.persistance.entity.UserEntity;
 import com.progzesp.stalking.persistance.repo.AnswerRepo;
 import com.progzesp.stalking.persistance.repo.GameRepo;
@@ -20,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +51,9 @@ public class AnswerServiceImpl implements AnswerService {
 
         AnswerEntity answerEntity = answerMapper.mapToEntity(newAnswer);
 
+        if (!answerEntity.validate())
+            return null;
+
         UserEntity userEntity = userRepo.getByUsername(user.getName());
         answerEntity.setUser(userEntity);
 
@@ -68,15 +75,24 @@ public class AnswerServiceImpl implements AnswerService {
 
         // check if all prerequisite tasks are approved
         for(TaskEntity prerequisiteTask : taskEntity.getPrerequisiteTasks()) {
+            AnswerEntity res = null;
 
-            AnswerEntity template = new AnswerEntity();
-            template.setUser(userEntity);
-            template.setTask(prerequisiteTask);
-            template.setChecked(true);
-            template.setApproved(true);
-            List<AnswerEntity> list = answerRepository.findAll(Example.of(template));
+            AnswerEntity[] entities = new AnswerEntity[] {new TextEntity(), new QREntity(),
+                    new PhotoEntity(), new AudioEntity(), new NavPosEntity()};
+            for (AnswerEntity toFind : entities) {
+                toFind.setTask(prerequisiteTask);
+                toFind.setChecked(true);
+                toFind.setApproved(true);
 
-            if(list.isEmpty()) {
+                List<AnswerEntity> list = answerRepository.findAll(Example.of(toFind));
+                for(AnswerEntity entity : list) {
+                    if(entity.getUser().getTeam().getId() == userEntity.getTeamId()) {
+                        res = list.get(0);
+                    }
+                }
+            }
+
+            if(res == null) {
                 return Pair.of(403, answerMapper.mapToETO(answerEntity));
             }
         }
@@ -86,27 +102,28 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public Pair<Integer, AnswerEto> modifyAnswer(Long id, AnswerEto answerEto, Principal user) {
+    public Pair<Integer, ModifyAnswerEto> modifyAnswer(Long id, ModifyAnswerEto answerEto, Principal user) {
 
         Optional<AnswerEntity> foundEntity = answerRepository.findById(id);
         if (foundEntity.isPresent()) {
             AnswerEntity answerEntity = foundEntity.get();
 
+
             if(answerEntity.getGame().getGameMasterId() != userRepo.getByUsername(user.getName()).getId()) {
-                return Pair.of(403, new AnswerEto());
+                return Pair.of(403, new ModifyAnswerEto());
             }
 
-            AnswerEntity answerToSave = answerMapper.mapToEntity(answerEto);
+            AnswerEntity answerToSave = answerMapper.mapModifyAnswerEtoToEntity(answerEto);
 
             try {
                 copyNonStaticNonNull(answerEntity, answerToSave);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
-            return Pair.of(200, answerMapper.mapToETO(answerEntity));
+            return Pair.of(200, answerMapper.mapToModifyAnswerETO(answerEntity));
         }
         else
-            return Pair.of(400, new AnswerEto());
+            return Pair.of(400, new ModifyAnswerEto());
     }
 
     @Override
@@ -129,50 +146,39 @@ public class AnswerServiceImpl implements AnswerService {
             AnswerEntity answerEntity = result.get();
             Long userId = userRepo.getByUsername(user.getName()).getId();
             if(answerEntity.getUserId() != userId && answerEntity.getGame().getGameMasterId() != userId) {
-                return Pair.of(403, new AnswerEto());
+                return Pair.of(403, new NoNavPosEto());
             }
             return Pair.of(200, answerMapper.mapToETO(answerEntity));
         }
-        return Pair.of(400, new AnswerEto());
+        return Pair.of(400, new NoNavPosEto());
     }
 
     @Override
     public Pair<Integer, List<AnswerEto>> findAnswersByCriteria(Optional<Long> gameId, Optional<String> filter, Principal user) {
-        AnswerEntity toFind = new AnswerEntity();
-
-        boolean checkedFilter = false;
-        boolean unchecked = false;
-        if (filter.isPresent()) {
-            if (filter.get().equals("checked")) {
-                toFind.setChecked(true);
-                checkedFilter = true;
-            }
-            else if (filter.get().equals("unchecked")) {
-                toFind.setChecked(false);
-                checkedFilter = true;
-                unchecked = true;
-            }
-        }
-
-        if (gameId.isPresent()) {
-            Optional<GameEntity> optionalGame = gameRepo.findById(gameId.get());
-            if (optionalGame.isPresent()) {
-                GameEntity game = optionalGame.get();
-                if(!unchecked && game.getGameMasterId() != userRepo.getByUsername(user.getName()).getId()) {
-                    return Pair.of(403, new ArrayList<>());
+        List<AnswerEntity> result = new LinkedList<>();
+        AnswerEntity[] entities = new AnswerEntity[] {new TextEntity(), new QREntity(),
+                new PhotoEntity(), new AudioEntity(), new NavPosEntity()};
+        for (AnswerEntity toFind : entities) {
+            if (gameId.isPresent()) {
+                Optional<GameEntity> game = gameRepo.findById(gameId.get());
+                if (game.isPresent()) {
+                    toFind.setGame(game.get());
                 }
-                toFind.setGame(game);
-
+                else {
+                    return Pair.of(400, new ArrayList<>());
+                }
             }
-            else {
-                return Pair.of(400, new ArrayList<>());
+            if (filter.isPresent()) {
+                if (filter.get().equals("checked")) {
+                    toFind.setChecked(true);
+                }
+                else if (filter.get().equals("unchecked")) {
+                    toFind.setChecked(false);
+                }
             }
+            result.addAll(answerRepository.findAll(Example.of(toFind)));
         }
 
-        String[] paths = {"approved"};
-        if(!checkedFilter) paths = new String[] {"approved", "checked"};
-        ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll().withIgnorePaths(paths);
-        List<AnswerEntity> result = answerRepository.findAll(Example.of(toFind, exampleMatcher));
         return Pair.of(200, answerMapper.mapToETOList(result));
     }
 

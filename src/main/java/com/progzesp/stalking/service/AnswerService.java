@@ -1,6 +1,7 @@
 package com.progzesp.stalking.service;
 
-import com.progzesp.stalking.domain.AnswerEto;
+import com.progzesp.stalking.domain.answer.AnswerEto;
+import com.progzesp.stalking.domain.answer.ModifyAnswerEto;
 import org.springframework.data.util.Pair;
 
 import java.security.Principal;
@@ -11,7 +12,7 @@ public interface AnswerService extends Service {
 
     Pair<Integer, AnswerEto> save(AnswerEto newTask, Principal user);
 
-    Pair<Integer, AnswerEto> modifyAnswer(Long id, AnswerEto taskEto, Principal user);
+    Pair<Integer, ModifyAnswerEto> modifyAnswer(Long id, ModifyAnswerEto jsonObject, Principal user);
     boolean deleteAnswer(Long id);
 
     Pair<Integer, AnswerEto> findAnswerById(Long id, Principal user);

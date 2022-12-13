@@ -1,5 +1,9 @@
-package com.progzesp.stalking.persistance.entity;
+package com.progzesp.stalking.persistance.entity.answer;
 
+import com.progzesp.stalking.persistance.entity.AbstractEntity;
+import com.progzesp.stalking.persistance.entity.GameEntity;
+import com.progzesp.stalking.persistance.entity.TaskEntity;
+import com.progzesp.stalking.persistance.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
@@ -7,7 +11,9 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "answer")
-public class AnswerEntity extends AbstractEntity {
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "DISCRIMINATOR", discriminatorType = DiscriminatorType.STRING)
+public abstract class AnswerEntity extends AbstractEntity {
 
     //TODO: odkomentować @NotNull przy user, przypisywać wartość na podstawie session tokena w POST answer
     //@NotNull
@@ -24,8 +30,8 @@ public class AnswerEntity extends AbstractEntity {
     @Value("false")
     private boolean checked;
 
-    @NotNull
-    private String response;
+    @Value("0")
+    private int score;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
@@ -115,14 +121,6 @@ public class AnswerEntity extends AbstractEntity {
         this.task = task;
     }
 
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
     public boolean isApproved() {
         return approved;
     }
@@ -138,5 +136,15 @@ public class AnswerEntity extends AbstractEntity {
     public boolean isChecked() {
         return checked;
     }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public abstract boolean validate();
 
 }

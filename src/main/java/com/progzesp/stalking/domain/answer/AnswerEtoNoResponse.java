@@ -1,15 +1,20 @@
-package com.progzesp.stalking.domain;
+package com.progzesp.stalking.domain.answer;
+
+import com.progzesp.stalking.domain.AbstractEto;
 
 public class AnswerEtoNoResponse extends AbstractEto {
 
     private Long userId;
 
-
     private boolean approved;
 
     private boolean checked;
 
+    private int score;
+
     private Long taskId;
+
+    private Long gameId;
 
     public Long getUserId() {
         return userId;
@@ -43,4 +48,19 @@ public class AnswerEtoNoResponse extends AbstractEto {
         this.checked = checked;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public Long getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
+    }
 }

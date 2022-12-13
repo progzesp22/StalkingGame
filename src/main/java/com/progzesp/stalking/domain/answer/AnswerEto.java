@@ -1,18 +1,23 @@
-package com.progzesp.stalking.domain;
+package com.progzesp.stalking.domain.answer;
 
-public class AnswerEto extends AbstractEto {
+import com.progzesp.stalking.domain.AbstractEto;
+import com.progzesp.stalking.persistance.entity.TaskType;
+
+public abstract class AnswerEto extends AbstractEto {
 
     private Long userId;
-
-    private String response;
 
     private boolean approved;
 
     private boolean checked;
 
+    private int score;
+
     private Long taskId;
 
     private Long gameId;
+
+    private TaskType type;
 
     public Long getGameId() {
         return gameId;
@@ -38,13 +43,6 @@ public class AnswerEto extends AbstractEto {
         this.taskId = taskId;
     }
 
-    public void setResponse(String response) {
-        this.response = response;
-    }
-
-    public String getResponse() {
-        return response;
-    }
     public boolean isApproved() {
         return approved;
     }
@@ -61,13 +59,32 @@ public class AnswerEto extends AbstractEto {
         this.checked = checked;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public TaskType getType() {
+        return type;
+    }
+
+    public void setType(TaskType type) {
+        this.type = type;
+    }
+
     public AnswerEtoNoResponse makeBodyWithoutResponse() {
         AnswerEtoNoResponse newBody = new AnswerEtoNoResponse();
         newBody.setApproved(this.approved);
         newBody.setChecked(this.checked);
+        newBody.setScore(this.score);
         newBody.setTaskId(this.taskId);
         newBody.setUserId(this.userId);
+        newBody.setGameId(this.gameId);
         newBody.setId(this.getId());
-        return  newBody;
+        return newBody;
     }
+
 }

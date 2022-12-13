@@ -29,6 +29,7 @@ public class DataLoader implements ApplicationRunner {
         user.setPassword("123");
         userService.encodePasswordAndSave(user);
         GameEto gameEto = new GameEto(userService.getByUsername("siema").getId());
+        gameEto.setName("testGame");
         gameService.save(gameEto);
     }
 }
