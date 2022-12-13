@@ -1,10 +1,10 @@
 package com.progzesp.stalking.domain.mapper;
 
 import com.progzesp.stalking.domain.AnswerEto;
-import com.progzesp.stalking.domain.TaskEto;
 import com.progzesp.stalking.persistance.entity.AnswerEntity;
-import com.progzesp.stalking.persistance.entity.TaskEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 @Component
 public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
@@ -19,6 +19,7 @@ public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
         answerEto.setChecked(entity.isChecked());
         answerEto.setUserId(entity.getUserId());
         answerEto.setGameId(entity.getGameId());
+        answerEto.setScore(entity.getScore());
         return answerEto;
     }
 
@@ -30,6 +31,8 @@ public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
         answerEntity.setApproved(answerEto.isApproved());
         answerEntity.setChecked(answerEto.isChecked());
         answerEntity.setTaskId(answerEto.getTaskId());
+        answerEntity.setScore(answerEntity.getScore());
+        answerEntity.setSubmitTime(new Date());
         return answerEntity;
     }
 }

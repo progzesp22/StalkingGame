@@ -14,6 +14,16 @@ public class AnswerEto extends AbstractEto {
 
     private Long gameId;
 
+    private Long score;
+
+    public Long getScore() {
+        return score;
+    }
+
+    public void setScore(Long score) {
+        this.score = score;
+    }
+
     public Long getGameId() {
         return gameId;
     }

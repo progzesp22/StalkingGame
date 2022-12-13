@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Entity
 @Table(name = "answer")
@@ -30,6 +31,28 @@ public class AnswerEntity extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private GameEntity game;
+
+    @Value("0")
+    private Long score;
+
+    @NotNull
+    private Date submitTime;
+
+    public void setSubmitTime(Date submitTime) {
+        this.submitTime = submitTime;
+    }
+
+    public Date getSubmitTime() {
+        return submitTime;
+    }
+
+    public Long getScore() {
+        return score;
+    }
+
+    public void setScore(Long score) {
+        this.score = score;
+    }
 
     public GameEntity getGame() {
         return game;
