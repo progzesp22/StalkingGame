@@ -2,6 +2,7 @@ package com.progzesp.stalking.controller;
 
 import java.util.List;
 
+import com.progzesp.stalking.domain.TaskStatEto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,7 @@ public class StatsRestController {
 
     @GetMapping("/tasks")
     public ResponseEntity<Object> avgTasksStatsGame(@RequestParam(name = "gameId") Long gameId){
-        List<Object> avgTasksStats = gameService.findAvgTasksStats(gameId);
+        List<TaskStatEto> avgTasksStats = gameService.findAvgTasksStats(gameId);
         if(avgTasksStats == null){
             return ResponseEntity.status(400).body(null);
         }
