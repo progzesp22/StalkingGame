@@ -36,10 +36,8 @@ public class GameRestController {
         Pair<Integer, GameEto> response = gameService.save(newGame, user);
         if (response.getFirst() == 200) {
             return ResponseEntity.ok().body(response.getSecond());
-        } else if (response.getFirst() == 400) {
-            return ResponseEntity.status(400).body(null);
         } else {
-            return ResponseEntity.status(400).body(null);
+            return ResponseEntity.status(response.getFirst()).body(null);
         }
     }
 
