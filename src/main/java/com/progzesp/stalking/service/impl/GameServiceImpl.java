@@ -139,8 +139,14 @@ public class GameServiceImpl implements GameService {
         if(gameEntity.getState()!=GameState.CREATED) {
             return Pair.of(400,new GameEto());
         }
-        //TODO COPY FIELDS
-        return Pair.of(200,gameMapper.mapToETO(gameEntity));
+        GameEntity gameToSave = gameMapper.mapToEntity(newGame);
+        try {
+            copyNonStaticNonNull(gameEntity,gameToSave);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        gameRepo.save(gameEntity);
+        return Pair.of(200, gameMapper.mapToETO(gameEntity));
     }
 
 

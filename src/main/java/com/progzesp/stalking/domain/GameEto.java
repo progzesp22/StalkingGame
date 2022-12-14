@@ -5,7 +5,6 @@ import com.progzesp.stalking.persistance.entity.GameState;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.util.Date;
-import java.util.List;
 
 public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
@@ -13,13 +12,7 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
     private String description;
 
-    private List<Long> taskEntityList;
-
     private Long gameMasterId;
-
-    private List<Long> teams;
-
-    private List<Long> answers;
 
     private int numberOfTeams;
 
@@ -46,28 +39,12 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
         this.description = description;
     }
 
-    public List<Long> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<Long> answers) {
-        this.answers = answers;
-    }
-
     public Long getGameMasterId() {
         return gameMasterId;
     }
 
     public void setGameMasterId(Long gameMasterId) {
         this.gameMasterId = gameMasterId;
-    }
-
-    public List<Long> getTeams() {
-        return teams;
-    }
-
-    public void setTeams(List<Long> teams) {
-        this.teams = teams;
     }
 
     public int getNumberOfTeams() {
@@ -92,14 +69,6 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
-    }
-
-    public List<Long> getTaskEntityList() {
-        return taskEntityList;
-    }
-
-    public void setTaskEntityList(List<Long> taskEntityList) {
-        this.taskEntityList = taskEntityList;
     }
 
     public GameState getState() {

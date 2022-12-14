@@ -24,10 +24,10 @@ public class GameEntity extends AbstractEntity {
     private List<TeamEntity> teams;
 
     @NotNull
-    private int numberOfTeams;
+    private Integer numberOfTeams;
 
     @NotNull
-    private int numberOfPlayersInTeam;
+    private Integer numberOfPlayersInTeam;
 
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<TaskEntity> taskEntityList;
