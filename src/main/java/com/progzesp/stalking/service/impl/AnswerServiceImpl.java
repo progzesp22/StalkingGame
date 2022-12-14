@@ -155,30 +155,21 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public Pair<Integer, List<AnswerEto>> findAnswersByCriteria(Optional<Long> gameId, Optional<String> filter, Principal user) {
-        List<AnswerEntity> result = new LinkedList<>();
-        AnswerEntity[] entities = new AnswerEntity[] {new TextEntity(), new QREntity(),
-                new PhotoEntity(), new AudioEntity(), new NavPosEntity()};
-        for (AnswerEntity toFind : entities) {
-            if (gameId.isPresent()) {
-                Optional<GameEntity> game = gameRepo.findById(gameId.get());
-                if (game.isPresent()) {
-                    toFind.setGame(game.get());
-                }
-                else {
-                    return Pair.of(400, new ArrayList<>());
-                }
+        List<AnswerEntity> result;
+        if (filter.isPresent()) {
+            if (filter.get().equals("checked")) {
+                result = this.answerRepository.findAnswersByCriteria(gameId, Optional.of(true));
             }
-            if (filter.isPresent()) {
-                if (filter.get().equals("checked")) {
-                    toFind.setChecked(true);
-                }
-                else if (filter.get().equals("unchecked")) {
-                    toFind.setChecked(false);
-                }
+            else if (filter.get().equals("unchecked")) {
+                result = this.answerRepository.findAnswersByCriteria(gameId, Optional.of(false));
             }
-            result.addAll(answerRepository.findAll(Example.of(toFind)));
+            else {
+                result = this.answerRepository.findAnswersByCriteria(gameId, Optional.empty());
+            }
         }
-
+        else {
+            result = this.answerRepository.findAnswersByCriteria(gameId, Optional.empty());
+        }
         return Pair.of(200, answerMapper.mapToETOList(result));
     }
 
