@@ -113,13 +113,10 @@ public class AnswerServiceImpl implements AnswerService {
                 return Pair.of(403, new ModifyAnswerEto());
             }
 
-            AnswerEntity answerToSave = answerMapper.mapModifyAnswerEtoToEntity(answerEto);
+            answerEntity.setChecked(answerEto.isChecked());
+            answerEntity.setApproved(answerEto.isApproved());
+            answerEntity.setScore(answerEto.getScore());
 
-            try {
-                copyNonStaticNonNull(answerEntity, answerToSave);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
             return Pair.of(200, answerMapper.mapToModifyAnswerETO(answerEntity));
         }
         else
