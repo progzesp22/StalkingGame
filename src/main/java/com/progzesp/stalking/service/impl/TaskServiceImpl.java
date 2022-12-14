@@ -51,12 +51,14 @@ public class TaskServiceImpl implements TaskService {
 
             List<TaskEntity> prerequisiteTasks = new ArrayList<>();
 
-            for(Long taskId : newTask.getPrerequisiteTasks()) {
-                Optional<TaskEntity> optionalPrerequisiteTask = taskRepo.findById(taskId);
-                if(optionalPrerequisiteTask.isPresent()) {
-                    TaskEntity prerequisiteTask = optionalPrerequisiteTask.get();
-                    if(prerequisiteTask.getGameId() == taskEntity.getGameId()) {
-                        prerequisiteTasks.add(prerequisiteTask);
+            if (newTask.getPrerequisiteTasks() != null) {
+                for(Long taskId : newTask.getPrerequisiteTasks()) {
+                    Optional<TaskEntity> optionalPrerequisiteTask = taskRepo.findById(taskId);
+                    if(optionalPrerequisiteTask.isPresent()) {
+                        TaskEntity prerequisiteTask = optionalPrerequisiteTask.get();
+                        if(prerequisiteTask.getGameId() == taskEntity.getGameId()) {
+                            prerequisiteTasks.add(prerequisiteTask);
+                        }
                     }
                 }
             }
