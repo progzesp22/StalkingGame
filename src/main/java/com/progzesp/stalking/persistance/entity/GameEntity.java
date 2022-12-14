@@ -141,6 +141,7 @@ public class GameEntity extends AbstractEntity {
     public void setState(GameState state) {
         this.state = state;
     }
+
     public GameState getState() {
         return state;
     }
@@ -148,6 +149,7 @@ public class GameEntity extends AbstractEntity {
     public List<MessageEntity> getMessages() {
         return messages;
     }
+
     public void setMessages(List<MessageEntity> messages) {
         this.messages = messages;
     }

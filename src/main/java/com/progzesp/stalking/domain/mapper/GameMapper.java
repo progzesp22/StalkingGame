@@ -12,9 +12,8 @@ import java.util.stream.Collectors;
 @Component
 public class GameMapper implements Mapper<GameEto, GameEntity> {
     public GameEto mapToETO(GameEntity entity) {
-
         GameEto game = new GameEto();
-       game.setId(entity.getId());
+        game.setId(entity.getId());
         game.setGameMasterId(entity.getGameMasterId());
         game.setNumberOfTeams(entity.getNumberOfTeams());
         game.setNumberOfPlayersInTeam(entity.getNumberOfPlayersInTeam());
@@ -27,7 +26,6 @@ public class GameMapper implements Mapper<GameEto, GameEntity> {
 
 
     public GameEntity mapToEntity(GameEto to) {
-
         GameEntity entity = new GameEntity();
         entity.setTaskEntityList(new ArrayList<>());
         entity.setId(to.getId());
