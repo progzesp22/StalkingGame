@@ -32,21 +32,9 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Pair<Integer, GameEto> save(GameEto newGame, Principal user) {
-        final Long userId = userRepo.getByUsername(user.getName()).getId();
-        final Long gameMasterId = newGame.getGameMasterId();
         GameEntity gameEntity = gameMapper.mapToEntity(newGame);
-
-        if (gameMasterId != null) {
-            if (userId == gameMasterId) {
-                gameEntity.setGameMaster(userRepo.findById(gameMasterId).get());
-                return Pair.of(200, gameMapper.mapToETO(this.gameRepo.save(gameEntity)));// ResponseEntity.ok().body(gameService.save(newGame, user));
-            } else {
-                return Pair.of(400, gameMapper.mapToETO(gameEntity));
-            }
-        } else {
-            gameEntity.setGameMaster(userRepo.findById(userId).get());
-            return Pair.of(200, gameMapper.mapToETO(this.gameRepo.save(gameEntity)));
-        }
+        gameEntity.setGameMaster(userRepo.getByUsername(user.getName()));
+        return Pair.of(200, gameMapper.mapToETO(this.gameRepo.save(gameEntity)));
     }
 
     @Override
