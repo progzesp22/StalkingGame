@@ -53,4 +53,14 @@ public class GameRestController {
     public boolean deleteGame(@PathVariable("id") Long id) {
         return gameService.deleteGame(id);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<GameEto> modifyGame(Principal user, @RequestBody GameEto newGame, @PathVariable("id") Long id) {
+        Pair<Integer, GameEto> response = gameService.modify(user, newGame, id);
+        if (response.getFirst() == 200) {
+            return ResponseEntity.ok().body(response.getSecond());
+        } else {
+            return ResponseEntity.status(response.getFirst()).body(null);
+        }
+    }
 }

@@ -125,4 +125,23 @@ public class GameServiceImpl implements GameService {
         }
         return Optional.empty();
     }
+
+    @Override
+    public Pair<Integer, GameEto> modify(Principal user, GameEto newGame, Long id) {
+        Optional<GameEntity> game = gameRepo.findById(id);
+        if (game.isEmpty()) {
+            return Pair.of(400,new GameEto());
+        }
+        GameEntity gameEntity = game.get();
+        if(!user.getName().equals(gameEntity.getGameMaster().getUsername())) {
+            return Pair.of(403,new GameEto());
+        }
+        if(gameEntity.getState()!=GameState.CREATED) {
+            return Pair.of(400,new GameEto());
+        }
+        //TODO COPY FIELDS
+        return Pair.of(200,gameMapper.mapToETO(gameEntity));
+    }
+
+
 }
