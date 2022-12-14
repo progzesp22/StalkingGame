@@ -39,7 +39,7 @@ public class GameEntity extends AbstractEntity {
     private List<MessageEntity> messages;
 
     @NotNull
-    private Date startDate;
+    private Date startTime;
 
     @NotNull
     private GameState state;
@@ -122,12 +122,12 @@ public class GameEntity extends AbstractEntity {
         this.numberOfPlayersInTeam = numberOfPlayersInTeam;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
     public List<TaskEntity> getTaskEntityList() {

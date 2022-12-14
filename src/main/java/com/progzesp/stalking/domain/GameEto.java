@@ -25,7 +25,7 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
     private int numberOfPlayersInTeam;
 
-    private Date startDate;
+    private Date startTime;
 
     @Enumerated(EnumType.STRING)
     private GameState state;
@@ -86,12 +86,12 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
         this.numberOfPlayersInTeam = numberOfPlayersInTeam;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
     public List<Long> getTaskEntityList() {
@@ -116,7 +116,7 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
     public GameEto(Long gameMasterId) {
         this.setGameMasterId(gameMasterId);
-        this.setStartDate(new Date());
+        this.setStartTime(new Date());
         this.setState(GameState.CREATED);
     }
 }
