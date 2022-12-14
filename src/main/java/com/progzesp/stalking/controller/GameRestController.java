@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/rest/games")
+@RequestMapping("/games")
 public class GameRestController {
 
     @Autowired
@@ -24,27 +25,40 @@ public class GameRestController {
         return ResponseEntity.ok().body(allGames);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<GameEto> findGameById(@PathVariable("id") Long id) {
+        final Optional<GameEto> answer = this.gameService.findGameById(id);
+        return answer.map(gameEto -> ResponseEntity.ok().body(gameEto)).orElseGet(() -> ResponseEntity.status(400).body(null));
+    }
+
     @PostMapping()
     public ResponseEntity<GameEto> addGame(Principal user, @RequestBody GameEto newGame) {
         Pair<Integer, GameEto> response = gameService.save(newGame, user);
-        if(response.getFirst() == 200){
+        if (response.getFirst() == 200) {
             return ResponseEntity.ok().body(response.getSecond());
-        }
-        else if(response.getFirst() == 400){
-            return ResponseEntity.status(400).body(null);
-        }
-        else{
-            return ResponseEntity.status(400).body(null);
+        } else {
+            return ResponseEntity.status(response.getFirst()).body(null);
         }
     }
 
     /**
      * Deletes the game alongside with all the tasks assigned to it.
+     *
      * @param id id of the object to delete.
      * @return true if delete successful. False if object with this id does not exist or delete unsuccessful.
      */
     @DeleteMapping("/{id}")
     public boolean deleteGame(@PathVariable("id") Long id) {
         return gameService.deleteGame(id);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<GameEto> modifyGame(Principal user, @RequestBody GameEto newGame, @PathVariable("id") Long id) {
+        Pair<Integer, GameEto> response = gameService.modify(user, newGame, id);
+        if (response.getFirst() == 200) {
+            return ResponseEntity.ok().body(response.getSecond());
+        } else {
+            return ResponseEntity.status(response.getFirst()).body(null);
+        }
     }
 }

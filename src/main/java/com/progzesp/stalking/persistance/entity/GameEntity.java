@@ -24,10 +24,10 @@ public class GameEntity extends AbstractEntity {
     private List<TeamEntity> teams;
 
     @NotNull
-    private int numberOfTeams;
+    private Integer numberOfTeams;
 
     @NotNull
-    private int numberOfPlayersInTeam;
+    private Integer numberOfPlayersInTeam;
 
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<TaskEntity> taskEntityList;
@@ -141,6 +141,7 @@ public class GameEntity extends AbstractEntity {
     public void setState(GameState state) {
         this.state = state;
     }
+
     public GameState getState() {
         return state;
     }
@@ -148,6 +149,7 @@ public class GameEntity extends AbstractEntity {
     public List<MessageEntity> getMessages() {
         return messages;
     }
+
     public void setMessages(List<MessageEntity> messages) {
         this.messages = messages;
     }

@@ -26,4 +26,6 @@ public interface GameService extends Service {
     boolean deleteGame(Long id);
 
     Optional<GameEto> findGameById(Long id);
+
+    Pair<Integer, GameEto> modify(Principal user, GameEto newGame, Long id);
 }
