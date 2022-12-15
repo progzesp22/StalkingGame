@@ -9,16 +9,14 @@ import com.progzesp.stalking.persistance.repo.TaskRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.util.Pair;
-
-import java.security.Principal;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -56,7 +54,7 @@ public class TaskServiceImpl implements TaskService {
                     Optional<TaskEntity> optionalPrerequisiteTask = taskRepo.findById(taskId);
                     if(optionalPrerequisiteTask.isPresent()) {
                         TaskEntity prerequisiteTask = optionalPrerequisiteTask.get();
-                        if(prerequisiteTask.getGameId() == taskEntity.getGameId()) {
+                        if(Objects.equals(prerequisiteTask.getGameId(), taskEntity.getGameId())) {
                             prerequisiteTasks.add(prerequisiteTask);
                         }
                     }
@@ -65,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
 
             taskEntity.setPrerequisiteTasks(prerequisiteTasks);
 
-            if(gameMasterId == userId){
+            if(Objects.equals(gameMasterId, userId)){
                 return Pair.of(200, taskMapper.mapToETO(taskRepo.save(taskEntity)));// ResponseEntity.ok().body(taskService.save(newTask, user));
             }
             else{
@@ -121,7 +119,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskEto> findTasksByCriteria(Optional<Long> gameId) {
-        TaskEntity toFind = new TaskEntity();
         List<TaskEntity> result;
         if (gameId.isPresent()) {
             result = this.taskRepo.findByGame_Id(gameId.get());

@@ -4,7 +4,6 @@ import com.progzesp.stalking.domain.answer.AnswerEto;
 import com.progzesp.stalking.domain.answer.ModifyAnswerEto;
 import com.progzesp.stalking.domain.answer.NavPosEto;
 import com.progzesp.stalking.domain.answer.NoNavPosEto;
-import com.progzesp.stalking.persistance.entity.answer.AnswerEntity;
 import com.progzesp.stalking.persistance.entity.TaskType;
 import com.progzesp.stalking.persistance.entity.answer.*;
 import org.springframework.stereotype.Component;

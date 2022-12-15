@@ -2,12 +2,11 @@ package com.progzesp.stalking.service;
 
 import com.progzesp.stalking.domain.GameEto;
 import com.progzesp.stalking.persistance.entity.GameState;
+import org.springframework.data.util.Pair;
 
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.util.Pair;
 
 public interface GameService extends Service {
 

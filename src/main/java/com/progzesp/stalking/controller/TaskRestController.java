@@ -2,7 +2,6 @@ package com.progzesp.stalking.controller;
 
 import com.progzesp.stalking.domain.TaskEto;
 import com.progzesp.stalking.service.TaskService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
@@ -10,12 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/rest/tasks")
+@RequestMapping("/tasks")
 public class TaskRestController {
 
     @Autowired

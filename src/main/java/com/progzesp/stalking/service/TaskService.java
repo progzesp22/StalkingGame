@@ -1,12 +1,11 @@
 package com.progzesp.stalking.service;
 
 import com.progzesp.stalking.domain.TaskEto;
+import org.springframework.data.util.Pair;
 
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.util.Pair;
 
 public interface TaskService extends Service {
 

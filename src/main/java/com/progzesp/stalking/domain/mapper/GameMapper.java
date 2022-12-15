@@ -1,13 +1,10 @@
 package com.progzesp.stalking.domain.mapper;
 
 import com.progzesp.stalking.domain.GameEto;
-import com.progzesp.stalking.persistance.entity.AbstractEntity;
 import com.progzesp.stalking.persistance.entity.GameEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class GameMapper implements Mapper<GameEto, GameEntity> {

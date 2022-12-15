@@ -2,9 +2,6 @@ package com.progzesp.stalking.controller;
 
 import com.progzesp.stalking.domain.MessageEto;
 import com.progzesp.stalking.domain.MessageInputEto;
-import com.progzesp.stalking.domain.TaskEto;
-import com.progzesp.stalking.persistance.entity.MessageEntity;
-import com.progzesp.stalking.service.GameService;
 import com.progzesp.stalking.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -16,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/rest/messages")
+@RequestMapping("/messages")
 public class MessagesRestController {
 
     @Autowired

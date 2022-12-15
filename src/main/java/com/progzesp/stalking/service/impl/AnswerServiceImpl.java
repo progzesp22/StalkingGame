@@ -4,11 +4,10 @@ import com.progzesp.stalking.domain.answer.AnswerEto;
 import com.progzesp.stalking.domain.answer.ModifyAnswerEto;
 import com.progzesp.stalking.domain.answer.NoNavPosEto;
 import com.progzesp.stalking.domain.mapper.AnswerMapper;
-import com.progzesp.stalking.persistance.entity.answer.AnswerEntity;
 import com.progzesp.stalking.persistance.entity.GameEntity;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
-import com.progzesp.stalking.persistance.entity.answer.*;
 import com.progzesp.stalking.persistance.entity.UserEntity;
+import com.progzesp.stalking.persistance.entity.answer.*;
 import com.progzesp.stalking.persistance.repo.AnswerRepo;
 import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.TaskRepo;
@@ -16,15 +15,13 @@ import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -86,7 +83,7 @@ public class AnswerServiceImpl implements AnswerService {
 
                 List<AnswerEntity> list = answerRepository.findAll(Example.of(toFind));
                 for(AnswerEntity entity : list) {
-                    if(entity.getUser().getTeam().getId() == userEntity.getTeamId()) {
+                    if(Objects.equals(entity.getUser().getTeam().getId(), userEntity.getTeamId())) {
                         res = list.get(0);
                     }
                 }
@@ -109,7 +106,7 @@ public class AnswerServiceImpl implements AnswerService {
             AnswerEntity answerEntity = foundEntity.get();
 
 
-            if(answerEntity.getGame().getGameMasterId() != userRepo.getByUsername(user.getName()).getId()) {
+            if(!Objects.equals(answerEntity.getGame().getGameMasterId(), userRepo.getByUsername(user.getName()).getId())) {
                 return Pair.of(403, new ModifyAnswerEto());
             }
 
@@ -142,7 +139,7 @@ public class AnswerServiceImpl implements AnswerService {
         if(result.isPresent()) {
             AnswerEntity answerEntity = result.get();
             Long userId = userRepo.getByUsername(user.getName()).getId();
-            if(answerEntity.getUserId() != userId && answerEntity.getGame().getGameMasterId() != userId) {
+            if(!Objects.equals(answerEntity.getUserId(), userId) && !Objects.equals(answerEntity.getGame().getGameMasterId(), userId)) {
                 return Pair.of(403, new NoNavPosEto());
             }
             return Pair.of(200, answerMapper.mapToETO(answerEntity));

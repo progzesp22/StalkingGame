@@ -7,8 +7,8 @@ import com.progzesp.stalking.persistance.entity.TaskType;
 import com.progzesp.stalking.service.AnswerService;
 import com.progzesp.stalking.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.data.util.Pair;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/rest/answers")
+@RequestMapping("/answers")
 public class AnswerRestController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class AnswerRestController {
     @GetMapping()
     public ResponseEntity<List<AnswerEtoNoResponse>> findSpecificAnswers(Principal user, @RequestParam Optional<Long> gameId, @RequestParam Optional<String> filter) {
         final Pair<Integer, List<AnswerEto>> answers = this.answerService.findAnswersByCriteria(gameId, filter, user);
-        Integer statusCode = answers.getFirst();
+        int statusCode = answers.getFirst();
         if(statusCode == 200) {
             return ResponseEntity.ok().body(answers.getSecond().stream().map(AnswerEto::makeBodyWithoutResponse).toList());
         }
@@ -38,7 +38,7 @@ public class AnswerRestController {
     @GetMapping("/{id}")
     public ResponseEntity<AnswerEto> findAnswerById(Principal user, @PathVariable("id") Long id) {
         final Pair<Integer, AnswerEto> answer = this.answerService.findAnswerById(id, user);
-        Integer statusCode = answer.getFirst();
+        int statusCode = answer.getFirst();
         if (statusCode == 200) {
             return ResponseEntity.ok().body(answer.getSecond());
         }
@@ -49,9 +49,9 @@ public class AnswerRestController {
     public ResponseEntity<AnswerEto> addAnswer(Principal user, HttpEntity<String> httpEntity) {
         AnswerEto newAnswer = getAnswerFromHttpEntity(httpEntity);
         if (newAnswer == null)
-            return ResponseEntity.status(400).body(null);;
+            return ResponseEntity.status(400).body(null);
         Pair<Integer, AnswerEto> response = answerService.save(newAnswer, user);
-        Integer statusCode = response.getFirst();
+        int statusCode = response.getFirst();
         if(statusCode == 200) {
             return ResponseEntity.ok().body(response.getSecond());
         }
@@ -61,7 +61,7 @@ public class AnswerRestController {
     @PatchMapping("/{id}")
     public ResponseEntity<ModifyAnswerEto> modifyAnswer(Principal user, @PathVariable("id") Long id, ModifyAnswerEto answerEto) {
         Pair<Integer, ModifyAnswerEto> response = answerService.modifyAnswer(id, answerEto, user);
-        Integer statusCode = response.getFirst();
+        int statusCode = response.getFirst();
         if(statusCode == 200) {
             return ResponseEntity.ok().body(response.getSecond());
         }

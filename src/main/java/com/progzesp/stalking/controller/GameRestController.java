@@ -2,7 +2,6 @@ package com.progzesp.stalking.controller;
 
 import com.progzesp.stalking.domain.GameEto;
 import com.progzesp.stalking.service.GameService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;

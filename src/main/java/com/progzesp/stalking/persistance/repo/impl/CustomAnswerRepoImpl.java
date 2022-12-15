@@ -1,6 +1,8 @@
-package com.progzesp.stalking.persistance.repo;
+package com.progzesp.stalking.persistance.repo.impl;
 
 import com.progzesp.stalking.persistance.entity.answer.AnswerEntity;
+import com.progzesp.stalking.persistance.repo.CustomAnswerRepo;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CustomAnswerRepoImpl implements CustomAnswerRepo{
+@Repository
+public class CustomAnswerRepoImpl implements CustomAnswerRepo {
 
     @PersistenceContext
     EntityManager em;
