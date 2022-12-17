@@ -2,33 +2,33 @@ package com.progzesp.stalking.domain.answer;
 
 public class ModifyAnswerEto {
 
-    private boolean approved;
+    private Boolean approved;
 
-    private boolean checked;
+    private Boolean checked;
 
-    private int score;
+    private Integer score;
 
-    public boolean isApproved() {
+    public Boolean isApproved() {
         return approved;
     }
 
-    public void setApproved(boolean approved) {
+    public void setApproved(Boolean approved) {
         this.approved = approved;
     }
 
-    public boolean isChecked() {
+    public Boolean isChecked() {
         return checked;
     }
 
-    public void setChecked(boolean checked) {
+    public void setChecked(Boolean checked) {
         this.checked = checked;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 }
