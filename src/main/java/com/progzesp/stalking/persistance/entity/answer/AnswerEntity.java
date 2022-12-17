@@ -25,13 +25,13 @@ public abstract class AnswerEntity extends AbstractEntity {
     private TaskEntity task;
 
     @Value("false")
-    private boolean approved;
+    private Boolean approved;
 
     @Value("false")
-    private boolean checked;
+    private Boolean checked;
 
     @Value("0")
-    private int score;
+    private Integer score;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
@@ -121,27 +121,27 @@ public abstract class AnswerEntity extends AbstractEntity {
         this.task = task;
     }
 
-    public boolean isApproved() {
+    public Boolean isApproved() {
         return approved;
     }
 
-    public void setApproved(boolean approved) {
+    public void setApproved(Boolean approved) {
         this.approved = approved;
     }
 
-    public void setChecked(boolean checked) {
+    public void setChecked(Boolean checked) {
         this.checked = checked;
     }
 
-    public boolean isChecked() {
+    public Boolean isChecked() {
         return checked;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 

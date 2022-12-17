@@ -45,7 +45,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public Pair<Integer, AnswerEto> save(AnswerEto newAnswer, Principal user) {
-
+        clearEto(newAnswer);
         AnswerEntity answerEntity = answerMapper.mapToEntity(newAnswer);
 
         if (!answerEntity.validate())
@@ -97,6 +97,7 @@ public class AnswerServiceImpl implements AnswerService {
         answerEntity = this.answerRepository.save(answerEntity);
         return Pair.of(200, answerMapper.mapToETO(answerEntity));
     }
+
 
     @Override
     public Pair<Integer, ModifyAnswerEto> modifyAnswer(Long id, ModifyAnswerEto answerEto, Principal user) {
@@ -165,6 +166,12 @@ public class AnswerServiceImpl implements AnswerService {
             result = this.answerRepository.findAnswersByCriteria(gameId, Optional.empty());
         }
         return Pair.of(200, answerMapper.mapToETOList(result));
+    }
+
+    private void clearEto(AnswerEto eto) {
+        eto.setApproved(false);
+        eto.setChecked(false);
+        eto.setScore(0);
     }
 
 }

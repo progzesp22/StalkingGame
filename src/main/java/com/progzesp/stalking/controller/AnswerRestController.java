@@ -59,7 +59,7 @@ public class AnswerRestController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ModifyAnswerEto> modifyAnswer(Principal user, @PathVariable("id") Long id, ModifyAnswerEto answerEto) {
+    public ResponseEntity<ModifyAnswerEto> modifyAnswer(Principal user, @PathVariable("id") Long id, @RequestBody ModifyAnswerEto answerEto) {
         Pair<Integer, ModifyAnswerEto> response = answerService.modifyAnswer(id, answerEto, user);
         int statusCode = response.getFirst();
         if(statusCode == 200) {
