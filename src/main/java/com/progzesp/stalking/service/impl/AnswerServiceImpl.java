@@ -4,7 +4,7 @@ import com.progzesp.stalking.domain.answer.AnswerEto;
 import com.progzesp.stalking.domain.answer.ModifyAnswerEto;
 import com.progzesp.stalking.domain.answer.NoNavPosEto;
 import com.progzesp.stalking.domain.mapper.AnswerMapper;
-import com.progzesp.stalking.persistance.entity.GameEntity;
+import com.progzesp.stalking.persistance.entity.game.GameEntity;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
 import com.progzesp.stalking.persistance.entity.UserEntity;
 import com.progzesp.stalking.persistance.entity.answer.*;

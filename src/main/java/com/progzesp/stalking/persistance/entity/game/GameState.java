@@ -1,4 +1,4 @@
-package com.progzesp.stalking.persistance.entity;
+package com.progzesp.stalking.persistance.entity.game;
 
 public enum GameState {
 

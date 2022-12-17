@@ -3,7 +3,7 @@ package com.progzesp.stalking.service.impl;
 import com.progzesp.stalking.domain.MessageEto;
 import com.progzesp.stalking.domain.MessageInputEto;
 import com.progzesp.stalking.domain.mapper.MessageMapper;
-import com.progzesp.stalking.persistance.entity.GameEntity;
+import com.progzesp.stalking.persistance.entity.game.GameEntity;
 import com.progzesp.stalking.persistance.entity.MessageEntity;
 import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.MessageRepo;

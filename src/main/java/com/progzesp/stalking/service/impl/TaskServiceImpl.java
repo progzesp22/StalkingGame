@@ -2,7 +2,7 @@ package com.progzesp.stalking.service.impl;
 
 import com.progzesp.stalking.domain.TaskEto;
 import com.progzesp.stalking.domain.mapper.TaskMapper;
-import com.progzesp.stalking.persistance.entity.GameEntity;
+import com.progzesp.stalking.persistance.entity.game.GameEntity;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
 import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.TaskRepo;

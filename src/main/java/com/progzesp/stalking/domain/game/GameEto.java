@@ -1,11 +1,24 @@
-package com.progzesp.stalking.domain;
+package com.progzesp.stalking.domain.game;
 
-import com.progzesp.stalking.persistance.entity.GameState;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.progzesp.stalking.persistance.entity.game.EndCondition;
+import com.progzesp.stalking.persistance.entity.game.GameState;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "endCondition")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = TimeEndGameEto.class, name = "TIME"),
+        @JsonSubTypes.Type(value = ScoreEndGameEto.class, name = "SCORE"),
+        @JsonSubTypes.Type(value = ManualEndGameEto.class, name = "MANUAL"),
+        @JsonSubTypes.Type(value = TasksEndGameEto.class, name = "TASKS"),
+})
 public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
     private String name;
@@ -14,14 +27,22 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
     private Long gameMasterId;
 
-    private int numberOfTeams;
+    private Integer numberOfTeams;
 
-    private int numberOfPlayersInTeam;
-
-    private Date startTime;
+    private Integer numberOfPlayersInTeam;
 
     @Enumerated(EnumType.STRING)
     private GameState state;
+
+    private Timestamp startTime;
+
+    public Timestamp getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Timestamp startTime) {
+        this.startTime = startTime;
+    }
 
     public String getName() {
         return name;
@@ -47,28 +68,20 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
         this.gameMasterId = gameMasterId;
     }
 
-    public int getNumberOfTeams() {
+    public Integer getNumberOfTeams() {
         return numberOfTeams;
     }
 
-    public void setNumberOfTeams(int numberOfTeams) {
+    public void setNumberOfTeams(Integer numberOfTeams) {
         this.numberOfTeams = numberOfTeams;
     }
 
-    public int getNumberOfPlayersInTeam() {
+    public Integer getNumberOfPlayersInTeam() {
         return numberOfPlayersInTeam;
     }
 
-    public void setNumberOfPlayersInTeam(int numberOfPlayersInTeam) {
+    public void setNumberOfPlayersInTeam(Integer numberOfPlayersInTeam) {
         this.numberOfPlayersInTeam = numberOfPlayersInTeam;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
     }
 
     public GameState getState() {
@@ -85,7 +98,6 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
     public GameEto(Long gameMasterId) {
         this.setGameMasterId(gameMasterId);
-        this.setStartTime(new Date());
         this.setState(GameState.CREATED);
     }
 }

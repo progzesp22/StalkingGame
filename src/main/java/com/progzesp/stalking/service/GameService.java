@@ -1,7 +1,7 @@
 package com.progzesp.stalking.service;
 
-import com.progzesp.stalking.domain.GameEto;
-import com.progzesp.stalking.persistance.entity.GameState;
+import com.progzesp.stalking.domain.game.GameEto;
+import com.progzesp.stalking.persistance.entity.game.GameState;
 import org.springframework.data.util.Pair;
 
 import java.security.Principal;
@@ -11,8 +11,6 @@ import java.util.Optional;
 public interface GameService extends Service {
 
     Pair<Integer, GameEto> save(GameEto newGame, Principal user);
-
-    GameEto save(GameEto newGame);
 
     List<GameEto> findAllGames();
 

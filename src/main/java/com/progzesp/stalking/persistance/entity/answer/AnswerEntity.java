@@ -1,7 +1,7 @@
 package com.progzesp.stalking.persistance.entity.answer;
 
 import com.progzesp.stalking.persistance.entity.AbstractEntity;
-import com.progzesp.stalking.persistance.entity.GameEntity;
+import com.progzesp.stalking.persistance.entity.game.GameEntity;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
 import com.progzesp.stalking.persistance.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Value;

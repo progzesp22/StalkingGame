@@ -1,9 +1,9 @@
 package com.progzesp.stalking.service.impl;
 
-import com.progzesp.stalking.domain.GameEto;
+import com.progzesp.stalking.domain.game.GameEto;
 import com.progzesp.stalking.domain.mapper.GameMapper;
-import com.progzesp.stalking.persistance.entity.GameEntity;
-import com.progzesp.stalking.persistance.entity.GameState;
+import com.progzesp.stalking.persistance.entity.game.GameEntity;
+import com.progzesp.stalking.persistance.entity.game.GameState;
 import com.progzesp.stalking.persistance.entity.UserEntity;
 import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
@@ -35,20 +35,6 @@ public class GameServiceImpl implements GameService {
         GameEntity gameEntity = gameMapper.mapToEntity(newGame);
         gameEntity.setGameMaster(userRepo.getByUsername(user.getName()));
         return Pair.of(200, gameMapper.mapToETO(this.gameRepo.save(gameEntity)));
-    }
-
-    @Override
-    public GameEto save(GameEto newGame) {
-
-        GameEntity gameEntity = gameMapper.mapToEntity(newGame);
-
-        Long id = newGame.getGameMasterId();
-        Optional<UserEntity> optionalGM = userRepo.findById(id);
-        UserEntity gm = optionalGM.orElse(null);
-
-        gameEntity.setGameMaster(gm);
-        gameEntity = this.gameRepo.save(gameEntity);
-        return gameMapper.mapToETO(gameEntity);
     }
 
     @Override

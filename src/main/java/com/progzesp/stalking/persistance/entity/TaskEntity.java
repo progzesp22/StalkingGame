@@ -1,5 +1,7 @@
 package com.progzesp.stalking.persistance.entity;
 
+import com.progzesp.stalking.persistance.entity.game.GameEntity;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;

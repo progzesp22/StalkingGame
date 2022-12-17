@@ -1,14 +1,19 @@
-package com.progzesp.stalking.persistance.entity;
+package com.progzesp.stalking.persistance.entity.game;
 
+import com.progzesp.stalking.persistance.entity.*;
 import com.progzesp.stalking.persistance.entity.answer.AnswerEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "game")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "DISCRIMINATOR", discriminatorType = DiscriminatorType.STRING)
 public class GameEntity extends AbstractEntity {
 
     @NotNull
@@ -16,7 +21,8 @@ public class GameEntity extends AbstractEntity {
 
     private String description;
 
-    @NotNull
+    //TODO: uncomment
+    //@NotNull
     @ManyToOne
     private UserEntity gameMaster;
 
@@ -39,10 +45,37 @@ public class GameEntity extends AbstractEntity {
     private List<MessageEntity> messages;
 
     @NotNull
-    private Date startTime;
+    private GameState state;
 
     @NotNull
-    private GameState state;
+    @Enumerated(EnumType.STRING)
+    private EndCondition endCondition;
+
+    private Timestamp startTime;
+
+    public Timestamp getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Timestamp startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setNumberOfTeams(Integer numberOfTeams) {
+        this.numberOfTeams = numberOfTeams;
+    }
+
+    public void setNumberOfPlayersInTeam(Integer numberOfPlayersInTeam) {
+        this.numberOfPlayersInTeam = numberOfPlayersInTeam;
+    }
+
+    public EndCondition getEndCondition() {
+        return endCondition;
+    }
+
+    public void setEndCondition(EndCondition endCondition) {
+        this.endCondition = endCondition;
+    }
 
     public List<AnswerEntity> getAnswerEntityList() {
         return answerEntityList;
@@ -51,8 +84,6 @@ public class GameEntity extends AbstractEntity {
     public void setAnswerEntityList(List<AnswerEntity> answerEntityList) {
         this.answerEntityList = answerEntityList;
     }
-
-    //TODO add endCondition
 
     @Transient
     public Long getGameMasterId() {
@@ -120,14 +151,6 @@ public class GameEntity extends AbstractEntity {
 
     public void setNumberOfPlayersInTeam(int numberOfPlayersInTeam) {
         this.numberOfPlayersInTeam = numberOfPlayersInTeam;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
     }
 
     public List<TaskEntity> getTaskEntityList() {
