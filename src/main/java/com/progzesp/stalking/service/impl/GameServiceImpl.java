@@ -33,7 +33,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Pair<Integer, GameEto> save(GameEto newGame, Principal user) {
-        if (!this.validateEndCondition(newGame)) {
+        if (!this.validateEndCondition(newGame, false)) {
             return Pair.of(400, new GameEto());
         }
         GameEntity gameEntity = gameMapper.mapToEntity(newGame);
@@ -44,7 +44,7 @@ public class GameServiceImpl implements GameService {
     @Override
     public GameEto save(GameEto newGame) {
 
-        if (!this.validateEndCondition(newGame)) {
+        if (!this.validateEndCondition(newGame, false)) {
             return new GameEto();
         }
 
@@ -119,7 +119,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Pair<Integer, GameEto> modify(Principal user, GameEto newGame, Long id) {
-        if (!this.validateEndCondition(newGame)) {
+        if (!this.validateEndCondition(newGame, true)) {
             return Pair.of(400, new GameEto());
         }
         Optional<GameEntity> game = gameRepo.findById(id);
@@ -143,12 +143,12 @@ public class GameServiceImpl implements GameService {
         return Pair.of(200, gameMapper.mapToETO(gameEntity));
     }
 
-    private boolean validateEndCondition(GameEto gameEto) {
+    private boolean validateEndCondition(GameEto gameEto, boolean canBeNull) {
         if(gameEto.getEndCondition() == null)
-            return false;
+            return canBeNull;
 
         if (gameEto.getEndCondition().equals(EndCondition.SCORE)) {
-            if (gameEto.getEndTime() == null) {
+            if (gameEto.getEndScore() == null) {
                 return false;
             }
         }
