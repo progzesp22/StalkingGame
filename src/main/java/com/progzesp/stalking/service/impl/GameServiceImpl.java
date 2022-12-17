@@ -2,6 +2,7 @@ package com.progzesp.stalking.service.impl;
 
 import com.progzesp.stalking.domain.GameEto;
 import com.progzesp.stalking.domain.mapper.GameMapper;
+import com.progzesp.stalking.persistance.entity.EndCondition;
 import com.progzesp.stalking.persistance.entity.GameEntity;
 import com.progzesp.stalking.persistance.entity.GameState;
 import com.progzesp.stalking.persistance.entity.UserEntity;
@@ -32,6 +33,9 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Pair<Integer, GameEto> save(GameEto newGame, Principal user) {
+        if (!this.validateEndCondition(newGame)) {
+            return Pair.of(400, new GameEto());
+        }
         GameEntity gameEntity = gameMapper.mapToEntity(newGame);
         gameEntity.setGameMaster(userRepo.getByUsername(user.getName()));
         return Pair.of(200, gameMapper.mapToETO(this.gameRepo.save(gameEntity)));
@@ -39,6 +43,10 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public GameEto save(GameEto newGame) {
+
+        if (!this.validateEndCondition(newGame)) {
+            return new GameEto();
+        }
 
         GameEntity gameEntity = gameMapper.mapToEntity(newGame);
 
@@ -111,6 +119,9 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Pair<Integer, GameEto> modify(Principal user, GameEto newGame, Long id) {
+        if (!this.validateEndCondition(newGame)) {
+            return Pair.of(400, new GameEto());
+        }
         Optional<GameEntity> game = gameRepo.findById(id);
         if (game.isEmpty()) {
             return Pair.of(400, new GameEto());
@@ -130,5 +141,22 @@ public class GameServiceImpl implements GameService {
         }
         gameRepo.save(gameEntity);
         return Pair.of(200, gameMapper.mapToETO(gameEntity));
+    }
+
+    private boolean validateEndCondition(GameEto gameEto) {
+        if(gameEto.getEndCondition() == null)
+            return false;
+
+        if (gameEto.getEndCondition().equals(EndCondition.SCORE)) {
+            if (gameEto.getEndTime() == null) {
+                return false;
+            }
+        }
+        else if (gameEto.getEndCondition().equals(EndCondition.TIME)) {
+            if (gameEto.getEndTime() == null) {
+                return false;
+            }
+        }
+        return true;
     }
 }

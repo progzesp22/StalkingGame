@@ -23,6 +23,9 @@ public class GameMapper implements Mapper<GameEto, GameEntity> {
         game.setState(entity.getState());
         game.setName(entity.getName());
         game.setDescription(entity.getDescription());
+        game.setEndCondition(entity.getEndCondition());
+        game.setEndTime(entity.getEndTime());
+        game.setEndScore(entity.getEndScore());
         return game;
     }
 
@@ -42,6 +45,9 @@ public class GameMapper implements Mapper<GameEto, GameEntity> {
         entity.setName(to.getName());
         entity.setDescription(to.getDescription());
         entity.setGameMaster(userRepo.getByUsername(to.getGameMasterId()));
+        entity.setEndCondition(to.getEndCondition());
+        entity.setEndTime(to.getEndTime());
+        entity.setEndScore(to.getEndScore());
         return entity;
     }
 }
