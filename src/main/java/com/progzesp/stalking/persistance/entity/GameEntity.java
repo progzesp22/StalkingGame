@@ -44,6 +44,13 @@ public class GameEntity extends AbstractEntity {
     @NotNull
     private GameState state;
 
+    @NotNull
+    private EndCondition endCondition;
+
+    private Date endTime;
+
+    private Integer endScore;
+
     public List<AnswerEntity> getAnswerEntityList() {
         return answerEntityList;
     }
@@ -146,4 +153,29 @@ public class GameEntity extends AbstractEntity {
     public void addMessage(MessageEntity message) {
         messages.add(message);
     }
+
+    public EndCondition getEndCondition() {
+        return endCondition;
+    }
+
+    public void setEndCondition(EndCondition endCondition) {
+        this.endCondition = endCondition;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Integer getEndScore() {
+        return endScore;
+    }
+
+    public void setEndScore(Integer endScore) {
+        this.endScore = endScore;
+    }
+
 }

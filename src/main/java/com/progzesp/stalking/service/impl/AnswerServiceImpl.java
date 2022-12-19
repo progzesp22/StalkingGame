@@ -4,15 +4,14 @@ import com.progzesp.stalking.domain.answer.AnswerEto;
 import com.progzesp.stalking.domain.answer.ModifyAnswerEto;
 import com.progzesp.stalking.domain.answer.NoNavPosEto;
 import com.progzesp.stalking.domain.mapper.AnswerMapper;
-import com.progzesp.stalking.persistance.entity.GameEntity;
-import com.progzesp.stalking.persistance.entity.TaskEntity;
-import com.progzesp.stalking.persistance.entity.UserEntity;
+import com.progzesp.stalking.persistance.entity.*;
 import com.progzesp.stalking.persistance.entity.answer.*;
 import com.progzesp.stalking.persistance.repo.AnswerRepo;
 import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.TaskRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
 import com.progzesp.stalking.service.AnswerService;
+import com.progzesp.stalking.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.util.Pair;
@@ -42,6 +41,9 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private GameService gameService;
 
     @Override
     public Pair<Integer, AnswerEto> save(AnswerEto newAnswer, Principal user) {
@@ -81,14 +83,13 @@ public class AnswerServiceImpl implements AnswerService {
         //         toFind.setTask(prerequisiteTask);
         //         toFind.setChecked(true);
         //         toFind.setApproved(true);
-
-        //         List<AnswerEntity> list = answerRepository.findAll(Example.of(toFind));
-        //         for(AnswerEntity entity : list) {
-        //             if(Objects.equals(entity.getUser().getTeam().getId(), userEntity.getTeamId())) {
-        //                 res = list.get(0);
-        //             }
-        //         }
-        //     }
+        //        List<AnswerEntity> list = answerRepository.findAll(Example.of(toFind));
+        //        for(AnswerEntity entity : list) {
+        //            if(Objects.equals(entity.getUser().getTeamId(), userEntity.getTeamId())) {
+        //                res = list.get(0);
+        //            }
+        //        }
+        //    }
 
         //     if(res == null) {
         //         return Pair.of(403, answerMapper.mapToETO(answerEntity));
@@ -107,6 +108,7 @@ public class AnswerServiceImpl implements AnswerService {
         if (foundEntity.isPresent()) {
             AnswerEntity answerEntity = foundEntity.get();
 
+            UserEntity userEntity = userRepo.getByUsername(user.getName());
 
             if(!Objects.equals(answerEntity.getGame().getGameMasterId(), user.getName())) {
                 return Pair.of(403, new ModifyAnswerEto());
@@ -115,6 +117,71 @@ public class AnswerServiceImpl implements AnswerService {
             answerEntity.setChecked(answerEto.isChecked());
             answerEntity.setApproved(answerEto.isApproved());
             answerEntity.setScore(answerEto.getScore());
+
+            TeamEntity team = null;
+
+            for (TeamEntity teamEntity : answerEntity.getGame().getTeams()) {
+                for (TeamEntity userTeam : answerEntity.getUser().getTeams()) {
+                    if(Objects.equals(userTeam.getId(), teamEntity.getId())) {
+                        team = teamEntity;
+                        break;
+                    }
+                }
+            }
+
+            if(team == null) {
+                return Pair.of(400, new ModifyAnswerEto());
+            }
+
+            if(answerEntity.getGame().getAnswerEntityList() != null) {
+                if (answerEntity.getGame().getEndCondition().equals(EndCondition.SCORE)) {
+                    Integer score = 0;
+                    for (AnswerEntity answerEntityIterate : answerEntity.getGame().getAnswerEntityList()) {
+                        if (answerEntityIterate.isChecked() && answerEntityIterate.isApproved()) {
+                            for (TeamEntity userTeam : answerEntityIterate.getUser().getTeams()) {
+                                if(Objects.equals(userTeam.getId(), team.getId())) {
+                                    score += answerEntityIterate.getScore();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (score >= answerEntity.getGame().getEndScore()) {
+                        gameService.endGameplay(answerEntity.getGameId());
+                    }
+                } else if (answerEntity.getGame().getEndCondition().equals(EndCondition.TASKS)) {
+                    boolean areAllDone = true;
+                    for (TaskEntity taskEntity : answerEntity.getGame().getTaskEntityList()) {
+                        if (Objects.equals(taskEntity.getId(), answerEntity.getTaskId())) continue;
+                        boolean isTaskDone = false;
+                        AnswerEntity[] entities = new AnswerEntity[] {new TextEntity(), new QREntity(),
+                                new PhotoEntity(), new AudioEntity(), new NavPosEntity()};
+                        for (AnswerEntity toFind : entities) {
+                            toFind.setTask(taskEntity);
+                            toFind.setChecked(true);
+                            toFind.setApproved(true);
+
+                            List<AnswerEntity> list = answerRepository.findAll(Example.of(toFind));
+                            for(AnswerEntity entity : list) {
+                                for (TeamEntity userTeam : entity.getUser().getTeams()) {
+                                    if(Objects.equals(userTeam.getId(), team.getId())) {
+                                        isTaskDone = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(isTaskDone) break;
+                        }
+                        if (!isTaskDone) {
+                            areAllDone = false;
+                            break;
+                        }
+                    }
+                    if(areAllDone) {
+                        gameService.endGameplay(answerEntity.getGameId());
+                    }
+                }
+            }
 
             return Pair.of(200, answerMapper.mapToModifyAnswerETO(answerEntity));
         }

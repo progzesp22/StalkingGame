@@ -1,5 +1,6 @@
 package com.progzesp.stalking.domain;
 
+import com.progzesp.stalking.persistance.entity.EndCondition;
 import com.progzesp.stalking.persistance.entity.GameState;
 
 import javax.persistence.EnumType;
@@ -19,6 +20,13 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
     private int numberOfPlayersInTeam;
 
     private Date startTime;
+
+    @Enumerated(EnumType.STRING)
+    private EndCondition endCondition;
+
+    private Date endTime;
+
+    private Integer endScore;
 
     @Enumerated(EnumType.STRING)
     private GameState state;
@@ -87,5 +95,29 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
         this.setGameMasterId(gameMasterId);
         this.setStartTime(new Date());
         this.setState(GameState.CREATED);
+    }
+
+    public EndCondition getEndCondition() {
+        return endCondition;
+    }
+
+    public void setEndCondition(EndCondition endCondition) {
+        this.endCondition = endCondition;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Integer getEndScore() {
+        return endScore;
+    }
+
+    public void setEndScore(Integer endScore) {
+        this.endScore = endScore;
     }
 }

@@ -2,6 +2,7 @@ package com.progzesp.stalking;
 
 import com.progzesp.stalking.domain.GameEto;
 import com.progzesp.stalking.domain.UserEto;
+import com.progzesp.stalking.persistance.entity.EndCondition;
 import com.progzesp.stalking.service.GameService;
 import com.progzesp.stalking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class DataLoader implements ApplicationRunner {
         user.setPassword("123");
         userService.encodePasswordAndSave(user);
         GameEto gameEto = new GameEto("siema");
+        gameEto.setEndCondition(EndCondition.MANUAL);
         gameEto.setName("testGame");
         gameService.save(gameEto);
     }
