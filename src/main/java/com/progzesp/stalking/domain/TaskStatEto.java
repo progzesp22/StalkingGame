@@ -2,7 +2,7 @@ package com.progzesp.stalking.domain;
 
 public class TaskStatEto {
 
-    private int taskId;
+    private Long taskId;
 
     private String name;
 
@@ -16,7 +16,7 @@ public class TaskStatEto {
 
     private Double averageSolvingTime;
 
-    public int getTaskId() {
+    public Long getTaskId() {
         return taskId;
     }
 
@@ -44,7 +44,7 @@ public class TaskStatEto {
         return averageSolvingTime;
     }
 
-    public void setTaskId(int taskId) {
+    public void setTaskId(Long taskId) {
         this.taskId = taskId;
     }
 

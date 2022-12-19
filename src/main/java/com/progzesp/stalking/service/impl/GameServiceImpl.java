@@ -96,7 +96,8 @@ public class GameServiceImpl implements GameService {
                 TaskStatEntity taskStat = new TaskStatEntity();
                 taskStat.setName(task.getName());
                 taskStat.setMaxScore(task.getMaxScore());
-                
+                taskStat.setTaskId(task.getId());
+
                 TaskType taskType = task.getTaskType();
                 AnswerEntity exampleAnswer;
 
@@ -130,6 +131,7 @@ public class GameServiceImpl implements GameService {
                 uniqueTeams = uniqueTeams.stream().distinct().toList();
                 taskStat.setTeamsAttempted(uniqueTeams.size());
 
+                uniqueTeams = new ArrayList<>();
                 exampleAnswer.setApproved(true);
                 exampleAnswers = answerRepo.findAll(Example.of(exampleAnswer));
                 uniqueUsers = exampleAnswers.stream().map(AnswerEntity::getUser).distinct().toList();
@@ -137,9 +139,9 @@ public class GameServiceImpl implements GameService {
                     uniqueTeams.add(user.getTeamByGameId(id));
                 }
                 uniqueTeams = uniqueTeams.stream().distinct().toList();
-                taskStat.setTeamsAttempted(uniqueTeams.size());
+                taskStat.setTeamsApproved(uniqueTeams.size());
 
-                double scoreSum = exampleAnswers.stream().map(AnswerEntity::getScore).reduce(0, (a, b) -> a + b);
+                double scoreSum = exampleAnswers.stream().map(AnswerEntity::getScore).reduce(0, Integer::sum);
                 taskStat.setAverageScore(scoreSum / exampleAnswers.size());
 
                 long gameStart = optGame.get().getStartTime().getTime();

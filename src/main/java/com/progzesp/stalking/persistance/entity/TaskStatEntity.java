@@ -2,7 +2,7 @@ package com.progzesp.stalking.persistance.entity;
 
 public class TaskStatEntity extends AbstractEntity {
 
-    private Integer taskId;
+    private Long taskId;
 
     private String name;
 
@@ -16,7 +16,7 @@ public class TaskStatEntity extends AbstractEntity {
 
     private Double averageSolvingTime;
 
-    public Integer getTaskId() {
+    public Long getTaskId() {
         return taskId;
     }
 
@@ -44,7 +44,7 @@ public class TaskStatEntity extends AbstractEntity {
         return averageSolvingTime;
     }
 
-    public void setTaskId(Integer taskId) {
+    public void setTaskId(Long taskId) {
         this.taskId = taskId;
     }
 
