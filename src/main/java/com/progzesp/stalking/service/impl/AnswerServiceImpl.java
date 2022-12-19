@@ -6,6 +6,7 @@ import com.progzesp.stalking.domain.answer.NoNavPosEto;
 import com.progzesp.stalking.domain.mapper.AnswerMapper;
 import com.progzesp.stalking.persistance.entity.GameEntity;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
+import com.progzesp.stalking.persistance.entity.TeamEntity;
 import com.progzesp.stalking.persistance.entity.UserEntity;
 import com.progzesp.stalking.persistance.entity.answer.*;
 import com.progzesp.stalking.persistance.repo.AnswerRepo;
@@ -44,7 +45,8 @@ public class AnswerServiceImpl implements AnswerService {
     @Autowired
     private UserRepo userRepo;
 
-    @Autowired TeamRepo teamRepository;
+    @Autowired 
+    private TeamRepo teamRepository;
 
     @Override
     public Pair<Integer, AnswerEto> save(AnswerEto newAnswer, Principal user) {
@@ -115,6 +117,8 @@ public class AnswerServiceImpl implements AnswerService {
             answerEntity.setChecked(answerEto.isChecked());
             answerEntity.setApproved(answerEto.isApproved());
             answerEntity.setScore(answerEto.getScore());
+
+            userRepo.getByUsername(user.getName()).getTeamByGameId(answerEntity.getGameId()).updateScore(answerEto.getScore());
 
             return Pair.of(200, answerMapper.mapToModifyAnswerETO(answerEntity));
         }

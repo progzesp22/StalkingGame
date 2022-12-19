@@ -15,7 +15,7 @@ import com.progzesp.stalking.service.GameService;
 import com.progzesp.stalking.service.TaskService;
 
 @RestController
-@RequestMapping("/rest/stat")
+@RequestMapping("/stat")
 public class StatsRestController {
 
     @Autowired 

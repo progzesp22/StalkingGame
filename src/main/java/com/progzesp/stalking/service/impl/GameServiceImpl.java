@@ -149,6 +149,7 @@ public class GameServiceImpl implements GameService {
 
                 tasksStats.add(taskStat);
             }
+
             // TODO: add functions to calculate avg stats of answers for each task and return those stats
             // probably the best idea is to do something like AvgAnswerEntity/ETO and mapper to it 
             // and return List<> of them instead of generic List<Object>
