@@ -73,29 +73,30 @@ public class AnswerServiceImpl implements AnswerService {
         }
         answerEntity.setGame(gameEntity);
 
-        // check if all prerequisite tasks are approved
-        for(TaskEntity prerequisiteTask : taskEntity.getPrerequisiteTasks()) {
-            AnswerEntity res = null;
+        // REMOVED FROM PROTO AND COLLIDES WITH MAIN WORKFLOW - UNCOMMENT AFTER FIXED AND NEEDED
+        // // check if all prerequisite tasks are approved
+        // for(TaskEntity prerequisiteTask : taskEntity.getPrerequisiteTasks()) {
+        //     AnswerEntity res = null;
 
-            AnswerEntity[] entities = new AnswerEntity[] {new TextEntity(), new QREntity(),
-                    new PhotoEntity(), new AudioEntity(), new NavPosEntity()};
-            for (AnswerEntity toFind : entities) {
-                toFind.setTask(prerequisiteTask);
-                toFind.setChecked(true);
-                toFind.setApproved(true);
+        //     AnswerEntity[] entities = new AnswerEntity[] {new TextEntity(), new QREntity(),
+        //             new PhotoEntity(), new AudioEntity(), new NavPosEntity()};
+        //     for (AnswerEntity toFind : entities) {
+        //         toFind.setTask(prerequisiteTask);
+        //         toFind.setChecked(true);
+        //         toFind.setApproved(true);
 
-                List<AnswerEntity> list = answerRepository.findAll(Example.of(toFind));
-                for(AnswerEntity entity : list) {
-                    if(Objects.equals(entity.getUser().getTeam().getId(), userEntity.getTeamId())) {
-                        res = list.get(0);
-                    }
-                }
-            }
+        //         List<AnswerEntity> list = answerRepository.findAll(Example.of(toFind));
+        //         for(AnswerEntity entity : list) {
+        //             if(Objects.equals(entity.getUser().getTeam().getId(), userEntity.getTeamId())) {
+        //                 res = list.get(0);
+        //             }
+        //         }
+        //     }
 
-            if(res == null) {
-                return Pair.of(403, answerMapper.mapToETO(answerEntity));
-            }
-        }
+        //     if(res == null) {
+        //         return Pair.of(403, answerMapper.mapToETO(answerEntity));
+        //     }
+        // }
 
         answerEntity = this.answerRepository.save(answerEntity);
         return Pair.of(200, answerMapper.mapToETO(answerEntity));

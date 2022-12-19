@@ -11,7 +11,12 @@ public class TeamEntity extends AbstractEntity{
     @NotNull
     private String name;
 
-    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "teams_user",
+            joinColumns = { @JoinColumn(name = "team_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
     private List<UserEntity> members;
 
     @NotNull
@@ -20,6 +25,10 @@ public class TeamEntity extends AbstractEntity{
 
     @NotNull
     private int score;
+
+    @NotNull
+    @ManyToOne
+    private UserEntity creator;
 
     @Transient
     public Long getGameId() {
@@ -75,5 +84,13 @@ public class TeamEntity extends AbstractEntity{
 
     public int getScore(){
         return this.score;
+    }
+
+    public UserEntity getCreator() {
+        return creator;
+    }
+
+    public void setCreator(UserEntity creator) {
+        this.creator = creator;
     }
 }

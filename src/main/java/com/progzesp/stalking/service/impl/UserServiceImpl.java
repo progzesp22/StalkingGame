@@ -2,7 +2,6 @@ package com.progzesp.stalking.service.impl;
 
 import com.progzesp.stalking.domain.UserEto;
 import com.progzesp.stalking.domain.mapper.UserMapper;
-import com.progzesp.stalking.persistance.entity.TeamEntity;
 import com.progzesp.stalking.persistance.entity.UserEntity;
 import com.progzesp.stalking.persistance.repo.TeamRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
@@ -37,10 +36,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserEto encodePasswordAndSave(UserEto newUser) {
         UserEntity userEntity = userMapper.mapToEntity(newUser);
         userEntity.setPassword(PasswordUtils.encodePassword(userEntity.getPassword()));
-        Long id = newUser.getTeamId();
-        Optional<TeamEntity> optionalTeam = id != null ? teamRepo.findById(id) : Optional.empty();
-        TeamEntity team = optionalTeam.orElse(null);
-        userEntity.setTeam(team);
+        userEntity.setTeams(new ArrayList<>());
         userEntity = this.userRepo.save(userEntity);
         return userMapper.mapToETO(userEntity);
     }
@@ -49,10 +45,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserEto save(UserEto newUser) {
 
         UserEntity userEntity = userMapper.mapToEntity(newUser);
-        Long id = newUser.getTeamId();
-        Optional<TeamEntity> optionalTeam = id != null ? teamRepo.findById(id) : Optional.empty();
-        TeamEntity team = optionalTeam.orElse(null);
-        userEntity.setTeam(team);
+        userEntity.setTeams(new ArrayList<>());
         userEntity = this.userRepo.save(userEntity);
         return userMapper.mapToETO(userEntity);
     }

@@ -24,8 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
 import java.util.*;
 
 @Service
@@ -125,12 +123,21 @@ public class GameServiceImpl implements GameService {
                 
                 exampleAnswer.setTask(task);
                 List<AnswerEntity> exampleAnswers = answerRepo.findAll(Example.of(exampleAnswer));
-                List<TeamEntity> uniqueTeams = exampleAnswers.stream().map(AnswerEntity::getUser).map(UserEntity::getTeam).distinct().toList();
+                List<UserEntity> uniqueUsers = exampleAnswers.stream().map(AnswerEntity::getUser).distinct().toList();
+                List<TeamEntity> uniqueTeams = new ArrayList<>();
+                for(UserEntity user : uniqueUsers){
+                    uniqueTeams.add(user.getTeamByGameId(id));
+                }
+                uniqueTeams = uniqueTeams.stream().distinct().toList();
                 taskStat.setTeamsAttempted(uniqueTeams.size());
 
                 exampleAnswer.setApproved(true);
                 exampleAnswers = answerRepo.findAll(Example.of(exampleAnswer));
-                uniqueTeams = exampleAnswers.stream().map(AnswerEntity::getUser).map(UserEntity::getTeam).distinct().toList();
+                uniqueUsers = exampleAnswers.stream().map(AnswerEntity::getUser).distinct().toList();
+                for(UserEntity user : uniqueUsers){
+                    uniqueTeams.add(user.getTeamByGameId(id));
+                }
+                uniqueTeams = uniqueTeams.stream().distinct().toList();
                 taskStat.setTeamsAttempted(uniqueTeams.size());
 
                 double scoreSum = exampleAnswers.stream().map(AnswerEntity::getScore).reduce(0, (a, b) -> a + b);
