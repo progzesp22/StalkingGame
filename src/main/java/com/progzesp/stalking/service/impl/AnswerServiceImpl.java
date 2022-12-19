@@ -120,7 +120,7 @@ public class AnswerServiceImpl implements AnswerService {
             answerEntity.setApproved(answerEto.isApproved());
             answerEntity.setScore(answerEto.getScore());
 
-            userRepo.getByUsername(user.getName()).getTeamByGameId(answerEntity.getGameId()).updateScore(answerEto.getScore());
+            answerEntity.getUser().getTeamByGameId(answerEntity.getGameId()).updateScore(answerEto.getScore());
 
             return Pair.of(200, answerMapper.mapToModifyAnswerETO(answerEntity));
         }

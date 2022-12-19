@@ -95,7 +95,7 @@ public class GameServiceImpl implements GameService {
             for (TaskEntity task : tasks) {
                 TaskStatEntity taskStat = new TaskStatEntity();
                 taskStat.setName(task.getName());
-                taskStat.setMaxScore(task.getPoints());
+                taskStat.setMaxScore(task.getMaxScore());
                 
                 TaskType taskType = task.getTaskType();
                 AnswerEntity exampleAnswer;
