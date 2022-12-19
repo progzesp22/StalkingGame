@@ -21,6 +21,15 @@ public class UserEntity extends AbstractEntity {
         return this.teams;
     }
 
+    public TeamEntity getTeamByGameId(Long id){
+        for(TeamEntity team : teams){
+            if(team.getGameId() == id){
+                return team;
+            }
+        }
+        return null;
+    }
+
     public void setTeams(List<TeamEntity> teams) {
         this.teams = teams;
     }

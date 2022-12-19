@@ -6,12 +6,14 @@ import com.progzesp.stalking.domain.answer.NoNavPosEto;
 import com.progzesp.stalking.domain.mapper.AnswerMapper;
 import com.progzesp.stalking.persistance.entity.GameEntity;
 import com.progzesp.stalking.persistance.entity.TaskEntity;
+import com.progzesp.stalking.persistance.entity.TeamEntity;
 import com.progzesp.stalking.persistance.entity.UserEntity;
 import com.progzesp.stalking.persistance.entity.answer.*;
 import com.progzesp.stalking.persistance.repo.AnswerRepo;
 import com.progzesp.stalking.persistance.repo.GameRepo;
 import com.progzesp.stalking.persistance.repo.TaskRepo;
 import com.progzesp.stalking.persistance.repo.UserRepo;
+import com.progzesp.stalking.persistance.repo.TeamRepo;
 import com.progzesp.stalking.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -42,6 +44,9 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private TeamRepo teamRepository;
 
     @Override
     public Pair<Integer, AnswerEto> save(AnswerEto newAnswer, Principal user) {
@@ -111,10 +116,11 @@ public class AnswerServiceImpl implements AnswerService {
             if(!Objects.equals(answerEntity.getGame().getGameMasterId(), user.getName())) {
                 return Pair.of(403, new ModifyAnswerEto());
             }
-
             answerEntity.setChecked(answerEto.isChecked());
             answerEntity.setApproved(answerEto.isApproved());
             answerEntity.setScore(answerEto.getScore());
+
+            answerEntity.getUser().getTeamByGameId(answerEntity.getGameId()).updateScore(answerEto.getScore());
 
             return Pair.of(200, answerMapper.mapToModifyAnswerETO(answerEntity));
         }

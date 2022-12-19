@@ -8,6 +8,8 @@ import com.progzesp.stalking.persistance.entity.TaskType;
 import com.progzesp.stalking.persistance.entity.answer.*;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
 
@@ -29,6 +31,7 @@ public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
         answerEto.setUserId(entity.getUserId());
         answerEto.setGameId(entity.getGameId());
         answerEto.setType(fromEntityToType(entity));
+        answerEto.setScore(entity.getScore());
         return answerEto;
     }
 
@@ -47,6 +50,8 @@ public class AnswerMapper implements Mapper<AnswerEto, AnswerEntity> {
         answerEntity.setTaskId(answerEto.getTaskId());
         answerEntity.setGameId(answerEto.getGameId());
         answerEntity.setUserId(answerEto.getUserId());
+        answerEntity.setScore(answerEntity.getScore());
+        answerEntity.setSubmitTime(new Date());
         return answerEntity;
     }
 

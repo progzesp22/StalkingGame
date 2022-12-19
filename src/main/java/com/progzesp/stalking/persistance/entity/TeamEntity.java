@@ -24,6 +24,9 @@ public class TeamEntity extends AbstractEntity{
     private GameEntity game;
 
     @NotNull
+    private int score;
+
+    @NotNull
     @ManyToOne
     private UserEntity creator;
 
@@ -69,6 +72,18 @@ public class TeamEntity extends AbstractEntity{
 
     public void setMembers(List<UserEntity> members) {
         this.members = members;
+    }
+
+    public void setScore(int newScore){
+        this.score = newScore;
+    }
+
+    public void updateScore(int newScore){
+        this.score += newScore;
+    }
+
+    public int getScore(){
+        return this.score;
     }
 
     public UserEntity getCreator() {

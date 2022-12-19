@@ -19,6 +19,7 @@ public class TeamMapper implements Mapper<TeamEto, TeamEntity> {
         TeamEto eto = new TeamEto();
         eto.setId(entity.getId());
         eto.setName(entity.getName());
+        eto.setScore(entity.getScore());
         eto.setMembers(entity.getMembers().stream().map(UserEntity::getUsername).collect(Collectors.toList()));
         eto.setCreator(entity.getCreator().getUsername());
         eto.setGameId(entity.getGameId());
@@ -30,6 +31,7 @@ public class TeamMapper implements Mapper<TeamEto, TeamEntity> {
         TeamEntity entity = new TeamEntity();
         entity.setId(To.getId());
         entity.setName(To.getName());
+        entity.setScore(To.getScore());
         if (To.getMembers() != null) {
             entity.setMembers(To.getMembers().stream().map(userRepo::getByUsername).collect(Collectors.toList()));
         }
