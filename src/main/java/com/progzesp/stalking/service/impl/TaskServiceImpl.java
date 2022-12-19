@@ -41,9 +41,9 @@ public class TaskServiceImpl implements TaskService {
         Optional<GameEntity> game = gameRepo.findById(newTask.getGameId());
         TaskEntity taskEntity = taskMapper.mapToEntity(newTask);   
         if(game.isPresent()){
-            final Long userId = userRepo.getByUsername(user.getName()).getId();
+            final String userName = user.getName();
 
-            final Long gameMasterId = game.get().getGameMasterId();
+            final String gameMasterId = game.get().getGameMasterId();
 
             taskEntity.setGame(game.get());
 
@@ -63,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
 
             taskEntity.setPrerequisiteTasks(prerequisiteTasks);
 
-            if(Objects.equals(gameMasterId, userId)){
+            if(Objects.equals(gameMasterId, userName)){
                 return Pair.of(200, taskMapper.mapToETO(taskRepo.save(taskEntity)));// ResponseEntity.ok().body(taskService.save(newTask, user));
             }
             else{

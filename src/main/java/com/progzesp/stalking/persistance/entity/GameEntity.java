@@ -1,6 +1,8 @@
 package com.progzesp.stalking.persistance.entity;
 
 import com.progzesp.stalking.persistance.entity.answer.AnswerEntity;
+import com.progzesp.stalking.persistance.repo.UserRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,7 +12,6 @@ import java.util.List;
 @Entity
 @Table(name = "game")
 public class GameEntity extends AbstractEntity {
-
     @NotNull
     private String name;
 
@@ -55,23 +56,12 @@ public class GameEntity extends AbstractEntity {
     //TODO add endCondition
 
     @Transient
-    public Long getGameMasterId() {
+    public String getGameMasterId() {
 
         if (this.gameMaster == null) {
             return null;
         }
-        return this.gameMaster.getId();
-    }
-
-    public void setGameMasterId(Long gameId) {
-
-        if (gameId == null) {
-            this.gameMaster = null;
-        } else {
-            UserEntity gameMasterEntity = new UserEntity();
-            gameMasterEntity.setId(gameId);
-            this.gameMaster = gameMasterEntity;
-        }
+        return this.gameMaster.getUsername();
     }
 
     public String getName() {

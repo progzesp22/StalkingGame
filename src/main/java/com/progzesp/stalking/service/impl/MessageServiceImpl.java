@@ -71,8 +71,8 @@ public class MessageServiceImpl implements MessageService {
         }
         else {
             GameEntity gameEntity = gameOptional.get();
-            final Long userId = userRepo.getByUsername(user.getName()).getId();
-            if (userId == gameEntity.getGameMasterId()) {
+            final String userName = user.getName();
+            if (userName.equals(gameEntity.getGameMasterId())) {
                 MessageEntity messageEntity = messageMapper.mapToEntity(input);
                 messageRepo.save(messageEntity);
                 gameEntity.addMessage(messageEntity);
