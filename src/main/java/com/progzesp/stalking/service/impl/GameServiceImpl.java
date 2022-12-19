@@ -61,9 +61,8 @@ public class GameServiceImpl implements GameService {
 
         GameEntity gameEntity = gameMapper.mapToEntity(newGame);
 
-        Long id = newGame.getGameMasterId();
-        Optional<UserEntity> optionalGM = userRepo.findById(id);
-        UserEntity gm = optionalGM.orElse(null);
+        String gmName = newGame.getGameMaster();
+        UserEntity gm = userRepo.getByUsername(gmName);
 
         gameEntity.setGameMaster(gm);
         gameEntity = this.gameRepo.save(gameEntity);
@@ -223,9 +222,13 @@ public class GameServiceImpl implements GameService {
         if (!user.getName().equals(gameEntity.getGameMaster().getUsername())) {
             return Pair.of(403, new GameEto());
         }
-        if (gameEntity.getState() != GameState.CREATED) {
-            return Pair.of(400, new GameEto());
-        }
+// Temporarily disabled
+// TODO: add endpoints for starting games. Currently waiting for proto
+//
+//        if (gameEntity.getState() != GameState.CREATED) {
+//            return Pair.of(400, new GameEto());
+//        }
+
         GameEntity gameToSave = gameMapper.mapToEntity(newGame);
         try {
             copyNonStaticNonNull(gameEntity, gameToSave);

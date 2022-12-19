@@ -12,7 +12,7 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
 
     private String description;
 
-    private Long gameMasterId;
+    private String gameMaster;
 
     private int numberOfTeams;
 
@@ -39,12 +39,12 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
         this.description = description;
     }
 
-    public Long getGameMasterId() {
-        return gameMasterId;
+    public String getGameMaster() {
+        return gameMaster;
     }
 
-    public void setGameMasterId(Long gameMasterId) {
-        this.gameMasterId = gameMasterId;
+    public void setGameMaster(String gameMaster) {
+        this.gameMaster = gameMaster;
     }
 
     public int getNumberOfTeams() {
@@ -83,8 +83,8 @@ public class GameEto extends com.progzesp.stalking.domain.AbstractEto {
         this.setState(GameState.CREATED);
     }
 
-    public GameEto(Long gameMasterId) {
-        this.setGameMasterId(gameMasterId);
+    public GameEto(String gameMaster) {
+        this.setGameMaster(gameMaster);
         this.setStartTime(new Date());
         this.setState(GameState.CREATED);
     }

@@ -2,16 +2,21 @@ package com.progzesp.stalking.domain.mapper;
 
 import com.progzesp.stalking.domain.GameEto;
 import com.progzesp.stalking.persistance.entity.GameEntity;
+import com.progzesp.stalking.persistance.repo.UserRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
 @Component
 public class GameMapper implements Mapper<GameEto, GameEntity> {
+
+    @Autowired
+    private UserRepo userRepo;
     public GameEto mapToETO(GameEntity entity) {
         GameEto game = new GameEto();
         game.setId(entity.getId());
-        game.setGameMasterId(entity.getGameMasterId());
+        game.setGameMaster(entity.getGameMasterId());
         game.setNumberOfTeams(entity.getNumberOfTeams());
         game.setNumberOfPlayersInTeam(entity.getNumberOfPlayersInTeam());
         game.setStartTime(entity.getStartTime());
@@ -36,6 +41,7 @@ public class GameMapper implements Mapper<GameEto, GameEntity> {
         entity.setMessages(new ArrayList<>());
         entity.setName(to.getName());
         entity.setDescription(to.getDescription());
+        entity.setGameMaster(userRepo.getByUsername(to.getGameMaster()));
         return entity;
     }
 }

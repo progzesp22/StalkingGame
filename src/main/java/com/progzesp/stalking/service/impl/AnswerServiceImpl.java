@@ -45,7 +45,7 @@ public class AnswerServiceImpl implements AnswerService {
     @Autowired
     private UserRepo userRepo;
 
-    @Autowired 
+    @Autowired
     private TeamRepo teamRepository;
 
     @Override
@@ -111,7 +111,9 @@ public class AnswerServiceImpl implements AnswerService {
         Optional<AnswerEntity> foundEntity = answerRepository.findById(id);
         if (foundEntity.isPresent()) {
             AnswerEntity answerEntity = foundEntity.get();
-            if(!Objects.equals(answerEntity.getGame().getGameMasterId(), userRepo.getByUsername(user.getName()).getId())) {
+
+
+            if(!Objects.equals(answerEntity.getGame().getGameMasterId(), user.getName())) {
                 return Pair.of(403, new ModifyAnswerEto());
             }
             answerEntity.setChecked(answerEto.isChecked());
@@ -145,7 +147,7 @@ public class AnswerServiceImpl implements AnswerService {
         if(result.isPresent()) {
             AnswerEntity answerEntity = result.get();
             Long userId = userRepo.getByUsername(user.getName()).getId();
-            if(!Objects.equals(answerEntity.getUserId(), userId) && !Objects.equals(answerEntity.getGame().getGameMasterId(), userId)) {
+            if(!Objects.equals(answerEntity.getUserId(), userId) && !Objects.equals(answerEntity.getGame().getGameMasterId(), user.getName())) {
                 return Pair.of(403, new NoNavPosEto());
             }
             return Pair.of(200, answerMapper.mapToETO(answerEntity));

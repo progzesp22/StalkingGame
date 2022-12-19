@@ -22,17 +22,17 @@ public class TaskEntity extends AbstractEntity {
     private GameEntity game;
 
     @NotNull
-    private Integer points;
+    private Integer maxScore;
 
     @ManyToMany()
     private List<TaskEntity> prerequisiteTasks;
 
-    public Integer getPoints() {
-        return points;
+    public Integer getMaxScore() {
+        return maxScore;
     }
 
-    public void setPoints(Integer points) {
-        this.points = points;
+    public void setMaxScore(Integer points) {
+        this.maxScore = points;
     }
 
     public List<TaskEntity> getPrerequisiteTasks() {
