@@ -39,7 +39,6 @@ public class GameEntity extends AbstractEntity {
     @OneToMany
     private List<MessageEntity> messages;
 
-    @NotNull
     private Date startTime;
 
     @NotNull
