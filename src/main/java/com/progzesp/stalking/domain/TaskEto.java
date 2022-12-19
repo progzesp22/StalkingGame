@@ -17,16 +17,16 @@ public class TaskEto extends AbstractEto {
 
     private Long gameId;
 
-    private int points;
+    private int maxScore;
 
     private List<Long> prerequisiteTasks;
 
-    public int getPoints() {
-        return points;
+    public int getMaxScore() {
+        return maxScore;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
+    public void setMaxScore(int maxScore) {
+        this.maxScore = maxScore;
     }
 
     public List<Long> getPrerequisiteTasks() {

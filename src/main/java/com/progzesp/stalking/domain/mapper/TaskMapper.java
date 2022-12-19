@@ -19,7 +19,7 @@ public class TaskMapper implements Mapper<TaskEto, TaskEntity> {
         task.setDescription(entity.getDescription());
         task.setType(entity.getTaskType());
         task.setGameId(entity.getGameId());
-        task.setPoints(entity.getPoints());
+        task.setMaxScore(entity.getMaxScore());
         task.setPrerequisiteTasks(entity.getPrerequisiteTasks().stream().map(AbstractEntity::getId).collect(Collectors.toList()));
         return task;
     }
@@ -31,7 +31,7 @@ public class TaskMapper implements Mapper<TaskEto, TaskEntity> {
         entity.setName(taskTo.getName());
         entity.setDescription(taskTo.getDescription());
         entity.setTaskType(taskTo.getType());
-        entity.setPoints(taskTo.getPoints());
+        entity.setMaxScore(taskTo.getMaxScore());
         entity.setPrerequisiteTasks(new ArrayList<>());
         return entity;
     }

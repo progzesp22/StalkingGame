@@ -16,7 +16,7 @@ public class GameMapper implements Mapper<GameEto, GameEntity> {
     public GameEto mapToETO(GameEntity entity) {
         GameEto game = new GameEto();
         game.setId(entity.getId());
-        game.setGameMasterId(entity.getGameMasterId());
+        game.setGameMaster(entity.getGameMasterId());
         game.setNumberOfTeams(entity.getNumberOfTeams());
         game.setNumberOfPlayersInTeam(entity.getNumberOfPlayersInTeam());
         game.setStartTime(entity.getStartTime());
@@ -41,7 +41,7 @@ public class GameMapper implements Mapper<GameEto, GameEntity> {
         entity.setMessages(new ArrayList<>());
         entity.setName(to.getName());
         entity.setDescription(to.getDescription());
-        entity.setGameMaster(userRepo.getByUsername(to.getGameMasterId()));
+        entity.setGameMaster(userRepo.getByUsername(to.getGameMaster()));
         return entity;
     }
 }
