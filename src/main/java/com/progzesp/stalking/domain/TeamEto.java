@@ -12,6 +12,8 @@ public class TeamEto extends AbstractEto {
 
     private String creator;
 
+    private int score;  
+
     public String getCreator() {
         return creator;
     }
@@ -27,10 +29,6 @@ public class TeamEto extends AbstractEto {
     public void setGameId(Long gameId) {
         this.gameId = gameId;
     }
-
-    private int score;
-
-    private int score;
 
     public String getName() {
         return name;
