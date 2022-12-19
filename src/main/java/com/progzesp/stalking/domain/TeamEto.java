@@ -30,6 +30,8 @@ public class TeamEto extends AbstractEto {
 
     private int score;
 
+    private int score;
+
     public String getName() {
         return name;
     }
