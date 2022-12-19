@@ -108,7 +108,7 @@ public class AnswerServiceImpl implements AnswerService {
             AnswerEntity answerEntity = foundEntity.get();
 
 
-            if(!Objects.equals(answerEntity.getGame().getGameMasterId(), userRepo.getByUsername(user.getName()).getId())) {
+            if(!Objects.equals(answerEntity.getGame().getGameMasterId(), user.getName())) {
                 return Pair.of(403, new ModifyAnswerEto());
             }
 
@@ -141,7 +141,7 @@ public class AnswerServiceImpl implements AnswerService {
         if(result.isPresent()) {
             AnswerEntity answerEntity = result.get();
             Long userId = userRepo.getByUsername(user.getName()).getId();
-            if(!Objects.equals(answerEntity.getUserId(), userId) && !Objects.equals(answerEntity.getGame().getGameMasterId(), userId)) {
+            if(!Objects.equals(answerEntity.getUserId(), userId) && !Objects.equals(answerEntity.getGame().getGameMasterId(), user.getName())) {
                 return Pair.of(403, new NoNavPosEto());
             }
             return Pair.of(200, answerMapper.mapToETO(answerEntity));

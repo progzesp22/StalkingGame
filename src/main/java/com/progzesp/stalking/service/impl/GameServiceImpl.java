@@ -42,9 +42,8 @@ public class GameServiceImpl implements GameService {
 
         GameEntity gameEntity = gameMapper.mapToEntity(newGame);
 
-        Long id = newGame.getGameMasterId();
-        Optional<UserEntity> optionalGM = userRepo.findById(id);
-        UserEntity gm = optionalGM.orElse(null);
+        String gmId = newGame.getGameMasterId();
+        UserEntity gm = userRepo.getByUsername(gmId);
 
         gameEntity.setGameMaster(gm);
         gameEntity = this.gameRepo.save(gameEntity);
