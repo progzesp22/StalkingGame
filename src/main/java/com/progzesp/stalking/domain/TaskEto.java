@@ -12,6 +12,8 @@ public class TaskEto extends AbstractEto {
 
     private String description;
 
+    private String correct_answer;
+
     @Enumerated(EnumType.STRING)
     private TaskType type;
 
@@ -67,5 +69,13 @@ public class TaskEto extends AbstractEto {
 
     public void setType(TaskType type) {
         this.type = type;
+    }
+
+    public String getCorrect_answer() {
+        return correct_answer;
+    }
+
+    public void setCorrect_answer(String correct_answer) {
+        this.correct_answer = correct_answer;
     }
 }

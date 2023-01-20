@@ -13,6 +13,8 @@ public class TaskEntity extends AbstractEntity {
 
     private String description;
 
+    private String correct_answer;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private TaskType taskType;
@@ -93,5 +95,13 @@ public class TaskEntity extends AbstractEntity {
 
     public void setTaskType(TaskType taskType) {
         this.taskType = taskType;
+    }
+
+    public String getCorrect_answer() {
+        return correct_answer;
+    }
+
+    public void setCorrect_answer(String correct_answer) {
+        this.correct_answer = correct_answer;
     }
 }
