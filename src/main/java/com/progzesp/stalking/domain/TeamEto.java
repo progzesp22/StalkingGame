@@ -12,7 +12,7 @@ public class TeamEto extends AbstractEto {
 
     private String creator;
 
-    private int score;  
+    private Integer score;
 
     public String getCreator() {
         return creator;
@@ -46,11 +46,11 @@ public class TeamEto extends AbstractEto {
         this.members = members;
     }
 
-    public void setScore(int newScore){
+    public void setScore(Integer newScore){
         this.score = newScore;
     }
 
-    public int getScore(){
+    public Integer getScore(){
         return this.score;
     }
 }
