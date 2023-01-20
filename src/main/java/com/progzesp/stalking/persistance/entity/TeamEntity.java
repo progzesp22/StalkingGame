@@ -24,7 +24,7 @@ public class TeamEntity extends AbstractEntity{
     private GameEntity game;
 
     @NotNull
-    private int score;
+    private Integer score;
 
     @NotNull
     @ManyToOne
@@ -74,15 +74,15 @@ public class TeamEntity extends AbstractEntity{
         this.members = members;
     }
 
-    public void setScore(int newScore){
+    public void setScore(Integer newScore){
         this.score = newScore;
     }
 
-    public void updateScore(int newScore){
+    public void updateScore(Integer newScore){
         this.score += newScore;
     }
 
-    public int getScore(){
+    public Integer getScore(){
         return this.score;
     }
 

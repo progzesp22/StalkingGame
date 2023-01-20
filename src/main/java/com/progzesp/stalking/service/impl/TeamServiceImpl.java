@@ -63,6 +63,7 @@ public class TeamServiceImpl implements TeamService {
         TeamEntity teamEntity = teamMapper.mapToEntity(newTeam);
         if (game.isPresent()) {
             teamEntity.setGame(game.get());
+            teamEntity.setScore(0);
             UserEntity ue = userRepo.getByUsername(user.getName());
             List<UserEntity> members = new ArrayList<>();
             members.add(ue);
