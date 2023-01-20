@@ -17,5 +17,5 @@ public interface TaskService extends Service {
 
     TaskEto findTask(Long id);
 
-    List<TaskEto> findTasksByCriteria(Optional<Long> gameId);
+    List<TaskEto> findTasksByCriteria(Principal user, Optional<Long> gameId);
 }

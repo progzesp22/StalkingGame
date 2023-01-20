@@ -118,7 +118,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskEto> findTasksByCriteria(Optional<Long> gameId) {
+    public List<TaskEto> findTasksByCriteria(Principal user, Optional<Long> gameId) {
         List<TaskEntity> result;
         if (gameId.isPresent()) {
             result = this.taskRepo.findByGame_Id(gameId.get());
@@ -126,6 +126,14 @@ public class TaskServiceImpl implements TaskService {
         else {
             result = this.taskRepo.findAll();
         }
-        return taskMapper.mapToETOList(result);
+        List<TaskEto> resultEto = taskMapper.mapToETOList(result);
+        for (TaskEto task : resultEto) {
+            Optional<GameEntity> game = gameRepo.findById(task.getGameId());
+            if (game.isPresent()) {
+                if (!Objects.equals(game.get().getGameMasterId(), user.getName()))
+                    task.setCorrect_answer("unauthorized");
+            }
+        }
+        return resultEto;
     }
 }

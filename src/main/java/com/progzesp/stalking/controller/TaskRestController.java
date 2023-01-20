@@ -21,8 +21,8 @@ public class TaskRestController {
 
 
     @GetMapping()
-    public ResponseEntity<List<TaskEto>> findGameTasks(@RequestParam Optional<Long> gameId) {
-        List<TaskEto> tasks = this.taskService.findTasksByCriteria(gameId);
+    public ResponseEntity<List<TaskEto>> findGameTasks( Principal user, @RequestParam Optional<Long> gameId) {
+        List<TaskEto> tasks = this.taskService.findTasksByCriteria(user,gameId);
         return ResponseEntity.ok().body(tasks);
     }
 
