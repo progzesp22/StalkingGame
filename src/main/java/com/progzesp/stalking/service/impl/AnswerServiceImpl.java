@@ -101,6 +101,18 @@ public class AnswerServiceImpl implements AnswerService {
         // }
 
         answerEntity = this.answerRepository.save(answerEntity);
+
+        //AUTO VERIFY IF QR CODE IS CORRECT, IF YES -> GIVE POINTS
+        if (answerEntity instanceof QREntity) {
+            answerEntity.setChecked(true);
+            if (((QREntity) answerEntity).getResponseAsString().equals(answerEntity.getTask().getCorrect_answer())) {
+                answerEntity.setApproved(true);
+                answerEntity.getUser().getTeamByGameId(answerEntity.getGameId()).updateScore(answerEntity.getTask().getMaxScore());
+            }
+        }
+
+
+
         return Pair.of(200, answerMapper.mapToETO(answerEntity));
     }
 
