@@ -114,6 +114,18 @@ public class TeamServiceImpl implements TeamService {
         }
     }
 
+    private void removeUserFromAllTeamsInGame(UserEntity ue, GameEntity ge){
+        TeamEntity teamExample = new TeamEntity();
+        teamExample.setGame(ge);
+        List<TeamEntity> teams = teamRepo.findAll(Example.of(teamExample));
+        for(TeamEntity team : teams){
+            List<UserEntity> members = team.getMembers();
+            members.remove(ue);
+            team.setMembers(members);
+            teamRepo.save(team);
+        }
+    }
+
     @Override
     public Pair<Integer, TeamEto> join(Principal user, Long id) {
         Optional<TeamEntity> teamOpt = teamRepo.findById(id);
@@ -121,11 +133,13 @@ public class TeamServiceImpl implements TeamService {
             return Pair.of(400, new TeamEto());
         } else {
             TeamEntity team = teamOpt.get();
+            GameEntity game = team.getGame();
             UserEntity ue = userRepo.getByUsername(user.getName());
             List<UserEntity> members = team.getMembers();
             if (members.contains(ue)) {
                 return Pair.of(400, new TeamEto());
             } else {
+                removeUserFromAllTeamsInGame(ue, game);
                 members.add(ue);
                 team.setMembers(members);
                 team = teamRepo.save(team);
