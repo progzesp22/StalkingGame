@@ -170,21 +170,47 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public Pair<Integer, List<AnswerEto>> findAnswersByCriteria(Optional<Long> gameId, Optional<String> filter, Principal user) {
         List<AnswerEntity> result;
-        if (filter.isPresent()) {
-            if (filter.get().equals("checked")) {
-                result = this.answerRepository.findAnswersByCriteria(gameId, Optional.of(true));
+        if(gameId.isPresent()){
+            if(gameRepo.getReferenceById(gameId.get()).getGameMaster().getUsername().equals(user.getName())){
+                if (filter.isPresent()) {
+                    if (filter.get().equals("checked")) {
+                        result = this.answerRepository.findAnswersByCriteria(gameId, Optional.of(true));
+                    }
+                    else if (filter.get().equals("unchecked")) {
+                        result = this.answerRepository.findAnswersByCriteria(gameId, Optional.of(false));
+                    }
+                    else {
+                        result = this.answerRepository.findAnswersByCriteria(gameId, Optional.empty());
+                    }
+                }
+                else {
+                    result = this.answerRepository.findAnswersByCriteria(gameId, Optional.empty());
+                }
+                return Pair.of(200, answerMapper.mapToETOList(result));                  
             }
-            else if (filter.get().equals("unchecked")) {
-                result = this.answerRepository.findAnswersByCriteria(gameId, Optional.of(false));
+            else{
+                if (filter.isPresent()) {
+                    UserEntity curUser = userRepo.getByUsername(user.getName());
+                    if (filter.get().equals("checked")) {
+                        result = this.answerRepository.findAnswersByCriteria(gameId, Optional.of(true), curUser);
+                    }
+                    else if (filter.get().equals("unchecked")) {
+                        result = this.answerRepository.findAnswersByCriteria(gameId, Optional.of(false), curUser);
+                    }
+                    else {
+                        result = this.answerRepository.findAnswersByCriteria(gameId, Optional.empty(), curUser);
+                    }
+                }
+                else {
+                    result = this.answerRepository.findAnswersByCriteria(gameId, Optional.empty());
+                }
+                return Pair.of(200, answerMapper.mapToETOList(result));                 
             }
-            else {
-                result = this.answerRepository.findAnswersByCriteria(gameId, Optional.empty());
-            }
+          
         }
-        else {
-            result = this.answerRepository.findAnswersByCriteria(gameId, Optional.empty());
+        else{
+            return Pair.of(400, null);
         }
-        return Pair.of(200, answerMapper.mapToETOList(result));
     }
 
     private void clearEto(AnswerEto eto) {
